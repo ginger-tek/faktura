@@ -54,7 +54,7 @@ export default {
         <input type="number" v-model.number="invoice.labor_rate" step="0.01" min="1" required>
       </label>
       <label>Labor Amount
-        <input :value="invoice.labor_amount" readonly>
+        <input :value="invoice.labor_hours * invoice.labor_rate" readonly>
       </label>
     </div>
     <label>Itemization</label>
