@@ -43,7 +43,7 @@ export default {
     </nav>
   </header>
   <main class="container" style="flex:1">
-    <router-view></router-view>
+    <router-view :key="$route.fullPath"></router-view>
     <toaster></toaster>
   </main>
   <footer class="container bottom-spacing">
