@@ -99,7 +99,7 @@ export default {
         <select v-model="selectedExpense.expense_id" required>
           <option value="" disabled>Select an expense</option>
           <option v-for="expense in expenses" :key="expense.id" :value="expense.id">
-            {{ expense.summary }} | {{ money(expense.total_amount) }} | {{ expense.purchase_date }}
+            {{ expense.summary }} | {{ money(expense.total_amount) }} | {{ new Date(expense.purchase_date).toLocaleDateString() }}
           </option>
         </select>
       </label>
@@ -109,7 +109,7 @@ export default {
       </div>
     </form>
   </modal>
-  <modal ref="deleteModalRef">
+  <modal ref="deleteModalRef" hide-close>
     <template #title>Confirm Delete</template>
     <p>Are you sure you want to delete this invoice? This action cannot be undone.</p>
     <div class="flex stretch">
