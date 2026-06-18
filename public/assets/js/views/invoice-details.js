@@ -57,7 +57,10 @@ export default {
         <input :value="invoice.labor_hours * invoice.labor_rate" readonly>
       </label>
     </div>
-    <label>Itemization</label>
+    <div class="flex spread bottom-spacing-sm">
+      <label>Itemization</label>
+      <button type="button" @click="addExpenseModalRef.open()" class="nowrap x-small"><i class="bi bi-receipt"></i><i class="bi bi-plus"></i> <span>Add Expense</span></button>
+    </div>
     <auto-table :data="invoiceItems" :columns="itemColumns" :bordered="true">
       <template #empty-data>No invoice items</template>
       <template #summary="{ expense_id, summary }"><router-link :to="'/expenses/' + expense_id">{{ summary }}</router-link></template>
@@ -68,9 +71,17 @@ export default {
         <div style="float:right" data-tooltip="Remove Expense" data-placement="left"><i class="bi bi-x-circle danger-text pointer" @click="removeExpense({ expense_id })"></i></div>
       </template>
     </auto-table>
-    <div class="flex">
-      <button type="button" @click="addExpenseModalRef.open()" class="nowrap"><i class="bi bi-receipt"></i> Add Expense</button>
-    </div>
+    <article class="flex alert info top-spacing" style="max-inline-size:max-content;margin-inline:auto">
+      <div class="text-center nowrap">
+        <small>Expenses</small>
+        <h3>{{ money(invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
+      </div>
+      <div></div>
+      <div class="text-center nowrap">
+        <small>Invoice Total</small>
+        <h3>{{ money(invoice.labor_hours * invoice.labor_rate + invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
+      </div>
+    </article>
   </form>
   <modal ref="cloneModalRef" hide-close>
     <template #title>Clone Invoice</template>
