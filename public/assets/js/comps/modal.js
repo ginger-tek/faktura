@@ -15,11 +15,13 @@ export default {
     const modal = Vue.ref(null)
     const open = () => {
       modal.value?.showModal()
-      emit('opened')
+      emit('open')
+      setTimeout(() => emit('opened'), 200)
     }
     const close = () => {
       modal.value?.close()
-      emit('closed')
+      emit('close')
+      setTimeout(() => emit('closed'), 200)
     }
     expose({ open, close })
     return { modal, close }
