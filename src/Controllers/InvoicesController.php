@@ -28,6 +28,17 @@ class InvoicesController
     return $app->status(201)->sendJson($invoice);
   }
 
+  public static function submitClone(Routy $app)
+  {
+    $user = $app->getCtx('user');
+    $id = $app->getParam('id');
+    $invoice = InvoicesDataService::getById($id, $user->org_id);
+    if (!$invoice)
+      return $app->status(404)->sendJson(['error' => 'Invoice not found']);
+    $cloned_invoice = InvoicesDataService::clone($invoice, "Copy of {$invoice->summary}");
+    return $app->status(201)->sendJson($cloned_invoice);
+  }
+
   public static function list(Routy $app)
   {
     $user = $app->getCtx('user');
@@ -93,9 +104,10 @@ class InvoicesController
     $client = ClientsDataService::getById($invoice->client_id, $user->org_id);
     $org = OrgsDataService::getById($user->org_id);
     $invoice_template = OrgSettingsDataService::getValueByKey($user->org_id, 'invoice_template');
-    $markdown = preg_replace_callback('#{{\s*(\w+)\.(\w+)\s*}}#', function ($matches) use (&$invoice, &$client, &$org) {
-      [$obj, $field] = [$matches[1], $matches[2]];
+    $markdown = preg_replace_callback('#{{\s*((?<obj>\w+)\.)?(?<field>\w+)\s*(?:\|\s*(?<mod>\w+)\s*)?}}#', function ($matches) use (&$invoice, &$client, &$org) {
+      [$obj, $field, $mod] = [$matches['obj'] ?? null, $matches['field'], $matches['mod'] ?? null];
       $val = match (true) {
+        $field == 'current_date' => date('n/j/Y'),
         $obj == 'org' && !property_exists($org, $field) => OrgSettingsDataService::getValueByKey($org->id, $field),
         "$obj.$field" == 'invoice.items' => join("\r\n", [
           "|Summary|Unit Price|Quantity|Total Amount|",
@@ -109,6 +121,13 @@ class InvoicesController
         ]),
         default => ${$obj}->$field ?? ''
       };
+      if ($mod) {
+        $val = match ($mod) {
+          'date' => date('n/j/Y', strtotime($val)),
+          'currency' => UtilsService::toUSD($val),
+          default => $val
+        };
+      }
       return $val;
     }, $invoice_template);
     header('Content-Type: text/html');

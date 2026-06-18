@@ -14,6 +14,7 @@ class InvoiceRoutes
     $app->post('/', AuthMiddleware::authorize(PermissionsService::INVOICE_CREATE)(...), InvoicesController::submitCreate(...));
     $app->get('/', AuthMiddleware::authorize(PermissionsService::INVOICE_READ_ALL)(...), InvoicesController::list(...));
     $app->get('/:id', AuthMiddleware::authorize(PermissionsService::INVOICE_READ)(...), InvoicesController::get(...));
+    $app->post('/:id/clone', AuthMiddleware::authorize(PermissionsService::INVOICE_CREATE)(...), InvoicesController::submitClone(...));
     $app->get('/:id/items', AuthMiddleware::authorize(PermissionsService::INVOICE_READ)(...), InvoicesController::listItemizations(...));
     $app->post('/:id/add-expense', AuthMiddleware::authorize(PermissionsService::INVOICE_UPDATE)(...), InvoicesController::addExpense(...));
     $app->post('/:id/remove-expense', AuthMiddleware::authorize(PermissionsService::INVOICE_UPDATE)(...), InvoicesController::removeExpense(...));

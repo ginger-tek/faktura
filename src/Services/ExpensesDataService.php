@@ -28,6 +28,12 @@ class ExpensesDataService
     where org_id = ?", [$org_id])->fetchAll();
   }
 
+  public static function listByInvoiceId(string $org_id, string $invoice_id): array
+  {
+    return Db::run("select * from v_invoice_itemizations
+    where org_id = ? and invoice_id = ?", [$org_id, $invoice_id])->fetchAll();
+  }
+
   public static function addToInvoice(string $org_id, string $invoice_id, string $expense_id): object
   {
     Db::run("insert into invoice_expenses (org_id, invoice_id, expense_id)

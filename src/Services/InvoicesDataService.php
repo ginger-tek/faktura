@@ -6,13 +6,25 @@ use Faktura\Data\Db;
 
 class InvoicesDataService
 {
-  public static function create(string $org_id, string $client_id, string $summary): object
+  public static function create(string $org_id, string $client_id, string $summary, ?float $labor_rate = null): object
   {
     $id = strtoupper(uniqid());
-    $default_labor_rate = OrgSettingsDataService::getValueByKey($org_id, 'default_labor_rate');
+    $labor_rate ??= OrgSettingsDataService::getValueByKey($org_id, 'default_labor_rate');
     Db::run("insert into invoices (id, org_id, client_id, summary, labor_rate)
-    values (?, ?, ?, ?, ?)", [$id, $org_id, $client_id, $summary, $default_labor_rate]);
+    values (?, ?, ?, ?, ?)", [$id, $org_id, $client_id, $summary, $labor_rate]);
     return self::getById($id, $org_id);
+  }
+
+  public static function clone(object $invoice, string $new_summary): object
+  {
+    $new_invoice = self::create($invoice->org_id, $invoice->client_id, $new_summary, $invoice->labor_rate);
+    $new_invoice->details = $invoice->details;
+    $new_invoice->labor_hours = $invoice->labor_hours;
+    $new_invoice = self::update($new_invoice);
+    $existingItems = ExpensesDataService::listByInvoiceId($invoice->org_id, $invoice->id);
+    foreach ($existingItems as $item)
+      ExpensesDataService::addToInvoice($new_invoice->org_id, $new_invoice->id, $item->expense_id);
+    return $new_invoice;
   }
 
   public static function getById(string $id, string $org_id): ?object

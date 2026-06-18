@@ -10,9 +10,10 @@ export default {
       <h4>{{ invoice?.summary }}</h4>
     </div>
     <div class="flex" style="gap:.5rem">
-      <button type="button" @click="printInvoice" class="nowrap"><i class="bi bi-printer"></i> Print</button>
-      <button type="button" @click="updateInvoice" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
-      <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
+      <button type="button" @click="cloneModalRef.open()" class="nowrap"><i class="bi bi-copy"></i> <span>Clone</span></button>
+      <button type="button" @click="printInvoice" class="nowrap"><i class="bi bi-printer"></i> <span>Print</span></button>
+      <button type="button" @click="updateInvoice" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> <span>Save</span></button>
+      <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> <span>Delete</span></button>
     </div>
   </div>
   <form v-if="invoice" @submit.prevent="updateInvoice" :readonly="!state.hasRoles(['admin','invoice_manager']) || undefined">
@@ -71,7 +72,16 @@ export default {
       <button type="button" @click="addExpenseModalRef.open()" class="nowrap"><i class="bi bi-receipt"></i> Add Expense</button>
     </div>
   </form>
-  <modal ref="addExpenseModalRef" @opened="fetchExpenses">
+  <modal ref="cloneModalRef" hide-close>
+    <template #title>Clone Invoice</template>
+    <p>This will create a new invoice with the same client, summary, details, labor hours, labor rate, and items,
+      but with "Copy of " prefixed to the summary and no due date or paid date set.</p>
+    <div class="flex stretch">
+      <button type="button" class="secondary" @click="cloneModalRef.close()"><i class="bi bi-x-circle"></i> Cancel</button>
+      <button type="button" class="primary" @click="cloneInvoice" :aria-busy="cloning" :disabled="cloning"><i class="bi bi-copy"></i> Clone Invoice</button>
+    </div>
+  </modal>
+  <modal ref="addExpenseModalRef" @opened="fetchExpenses" @closed="selectedExpense.expense_id = ''" hide-close>
     <template #title>Add Expense</template>
     <form @submit.prevent="addExpense">
       <label>Expense
@@ -99,6 +109,7 @@ export default {
   setup() {
     const route = VueRouter.useRoute()
     const fetching = Vue.ref(false)
+    const cloning = Vue.ref(false)
     const updating = Vue.ref(false)
     const deleting = Vue.ref(false)
     const invoice = Vue.ref(null)
@@ -106,6 +117,7 @@ export default {
     const clients = Vue.ref([])
     const selector = Vue.ref(null)
     const router = VueRouter.useRouter()
+    const cloneModalRef = Vue.ref(null)
     const deleteModalRef = Vue.ref(null)
     const addExpenseModalRef = Vue.ref(null)
     const expenses = Vue.ref([])
@@ -150,6 +162,22 @@ export default {
       invoice.value.client_id = client.id
       invoice.value.client_full_name = client.full_name
       selector.value.removeAttribute('open')
+    }
+
+    const cloneInvoice = async () => {
+      try {
+        cloning.value = true
+        clearToasts()
+        const res = await api(`invoices/${invoice.value.id}/clone`, 'POST')
+        appendToast('Invoice cloned successfully', { variant: 'success' })
+        cloneModalRef.value.close()
+        router.push(`/invoices/${res.id}`)
+      } catch (ex) {
+        console.error(ex)
+        appendToast(`Failed to clone invoice: ${ex.error}`, { variant: 'danger', stay: true })
+      } finally {
+        cloning.value = false
+      }
     }
 
     const updateInvoice = async () => {
@@ -245,8 +273,8 @@ export default {
     Vue.onBeforeMount(fetchInvoiceDetails)
 
     return {
-      state, fetching, updating, deleting, invoice, invoiceItems, clients, selector, deleteModalRef, itemColumns, selectedExpense, adding, expenses, addExpenseModalRef,
-      fetchClients, setClient, fetchInvoiceDetails, updateInvoice, deleteInvoice, printInvoice, addExpense, removeExpense, fetchExpenses, money
+      state, fetching, cloning, updating, deleting, invoice, invoiceItems, clients, selector, deleteModalRef, itemColumns, selectedExpense, adding, expenses, addExpenseModalRef, cloneModalRef,
+      fetchClients, setClient, fetchInvoiceDetails, updateInvoice, deleteInvoice, printInvoice, addExpense, removeExpense, fetchExpenses, cloneInvoice, money
     }
   }
 }
