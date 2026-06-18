@@ -64,7 +64,7 @@ export default {
     <auto-table :data="invoiceItems" :columns="itemColumns" :bordered="true" class="nowrap">
       <template #empty-data>No invoice items</template>
       <template #summary="{ expense_id, summary }"><router-link :to="'/expenses/' + expense_id">{{ summary }}</router-link></template>
-      <template #purchase_date="{ purchase_date }">{{ new Date(purchase_date).toLocaleDateString() }}</template>
+      <template #purchase_date="{ purchase_date }">{{ new Date(purchase_date + ' 00:00:00').toLocaleDateString() }}</template>
       <template #unit_price="{ unit_price }">{{ money(unit_price) }}</template>
       <template #total_amount="{ total_amount, expense_id }">
         {{ money(total_amount) }}

@@ -15,7 +15,7 @@ export default {
       <template #labor_amount="{ labor_amount }">{{ money(labor_amount) }}</template>
       <template #expense_amount="{ expense_amount }">{{ money(expense_amount) }}</template>
       <template #total_amount="{ total_amount }">{{ money(total_amount) }}</template>
-      <template #due_date="{ due_date }">{{ new Date(due_date).toLocaleDateString() }}</template>
+      <template #due_date="{ due_date }">{{ due_date ? new Date(due_date + ' 00:00:00').toLocaleDateString() : '--' }}</template>
       <template #empty-data>No invoices</template>
       <template #empty-filter>No invoices found for that filter</template>
     </auto-table>

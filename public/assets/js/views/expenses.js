@@ -14,7 +14,7 @@ export default {
       <template #summary="{ id, summary }"><router-link :to="'/expenses/'+id">{{ summary }}</router-link></template>
       <template #unit_price="{ unit_price }">{{ money(unit_price) }}</template>
       <template #total_amount="{ total_amount }">{{ money(total_amount) }}</template>
-      <template #purchase_date="{ purchase_date }">{{ new Date(purchase_date).toLocaleDateString() }}</template>
+      <template #purchase_date="{ purchase_date }">{{ new Date(purchase_date + ' 00:00:00').toLocaleDateString() }}</template>
       <template #empty-data>No expenses</template>
       <template #empty-filter>No expenses found for that filter</template>
     </auto-table>
