@@ -12,7 +12,7 @@ require_once '../src/App.php';
   <title>Faktura</title>
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@2.1.1/css/pico.jade.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/@ginger-tek/picocss-extras@1.1.6/picocss-extras.css">
+  <link rel="stylesheet" href="https://unpkg.com/@ginger-tek/picocss-extras@1.1.9/picocss-extras.css">
   <link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <style>
     :root {
