@@ -1,0 +1,16 @@
+{
+    "name": "ginger-tek/faktura",
+    "description": "Invoicing made simpler",
+    "type": "project",
+    "require": {
+        "ginger-tek/routy": "^4.4",
+        "firebase/php-jwt": "^7.0",
+        "ramsey/uuid": "^4.9",
+        "parsedown/parsedown": "^1.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Faktura\\": "src/"
+        }
+    }
+}
