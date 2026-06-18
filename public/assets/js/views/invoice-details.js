@@ -36,7 +36,7 @@ export default {
       </label>
     </div>
     <label>Details
-      <textarea v-model="invoice.details" :rows="invoice.details?.split('\\n').length || 1" ></textarea>
+      <textarea v-model="invoice.details" :rows="invoice.details?.split('\\n')?.length || 1" ></textarea>
     </label>
     <div class="grid">
       <label>Due Date
