@@ -5,7 +5,7 @@ export default {
   template: `<div>
     <h2>Users</h2>
     <input type="search" v-model="filter" placeholder="Filter users...">
-    <auto-table :data="users" :columns="userColumns" :bordered="true" :filter="filter">
+    <auto-table :data="users" :columns="userColumns" :bordered="true" :filter="filter" class="nowrap">
       <template #display_name="{ id, display_name }"><router-link :to="'/users/'+id">{{ display_name }}</router-link></template>
       <template #role_name="{ role_id, role_name }"><router-link :to="'/roles/'+role_id">{{ role_name }}</router-link></template>
       <template #created_at="{ created_at }">{{ new Date(created_at * 1000).toLocaleString() }}</template>

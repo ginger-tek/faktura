@@ -10,7 +10,7 @@ export default {
       <button class="nowrap" @click="fetchClients" :aria-busy="fetching" :disabled="fetching"><i v-show="!fetching" class="bi bi-arrow-clockwise"></i> <span>Refresh</span></button>
       <button class="nowrap" @click="newClientModalRef.open()"><i class="bi bi-file-earmark-plus"></i> <span>New Client</span></button>
     </div>
-    <auto-table :data="clients" :columns="clientColumns" :bordered="true" :filter="filter">
+    <auto-table :data="clients" :columns="clientColumns" :bordered="true" :filter="filter" class="nowrap">
       <template #full_name="{ id, full_name }"><router-link :to="'/clients/'+id">{{ full_name }}</router-link></template>
       <template #empty-data>No clients</template>
       <template #empty-filter>No clients found for that filter</template>

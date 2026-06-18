@@ -32,7 +32,7 @@ export default {
     <article>
       <h2>Settings</h2>
       <input type="search" v-model="filter" placeholder="Filter settings...">
-      <auto-table :data="settings" :columns="settingsColumns" :bordered="true" :filter="filter">
+      <auto-table :data="settings" :columns="settingsColumns" :bordered="true" :filter="filter" class="nowrap">
         <template #setting_key="{ setting_key }"><router-link :to="'/settings/' + setting_key">{{ setting_key }}</router-link></template>
         <template #created_at="{ created_at }">{{ new Date(created_at * 1000).toLocaleString() }}</template>
         <template #updated_at="{ updated_at }">{{ new Date(updated_at * 1000).toLocaleString() }}</template>

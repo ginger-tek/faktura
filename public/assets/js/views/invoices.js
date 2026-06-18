@@ -9,7 +9,7 @@ export default {
       <button class="nowrap" @click="fetchInvoices" :aria-busy="fetching" :disabled="fetching"><i v-show="!fetching" class="bi bi-arrow-clockwise"></i> <span>Refresh</span></button>
       <button class="nowrap" @click="newInvoiceModalRef.open()"><i class="bi bi-file-earmark-plus"></i> <span>New Invoice</span></button>
     </div>
-    <auto-table :data="invoices" :columns="invoiceColumns" :bordered="true" :filter="filter">
+    <auto-table :data="invoices" :columns="invoiceColumns" :bordered="true" :filter="filter" class="nowrap">
       <template #id="{ id }"><router-link :to="'/invoices/'+id">{{ id }}</router-link></template>
       <template #client_full_name="{ client_id, client_full_name }"><router-link :to="'/clients/'+client_id">{{ client_full_name }}</router-link></template>
       <template #labor_amount="{ labor_amount }">{{ money(labor_amount) }}</template>

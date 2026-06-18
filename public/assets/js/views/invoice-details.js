@@ -61,7 +61,7 @@ export default {
       <label>Itemization</label>
       <button type="button" @click="addExpenseModalRef.open()" class="nowrap x-small"><i class="bi bi-receipt"></i><i class="bi bi-plus"></i> <span>Add Expense</span></button>
     </div>
-    <auto-table :data="invoiceItems" :columns="itemColumns" :bordered="true">
+    <auto-table :data="invoiceItems" :columns="itemColumns" :bordered="true" class="nowrap">
       <template #empty-data>No invoice items</template>
       <template #summary="{ expense_id, summary }"><router-link :to="'/expenses/' + expense_id">{{ summary }}</router-link></template>
       <template #purchase_date="{ purchase_date }">{{ new Date(purchase_date).toLocaleDateString() }}</template>

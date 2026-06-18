@@ -9,7 +9,7 @@ export default {
       <button class="nowrap" @click="fetchRoles" :aria-busy="fetching" :disabled="fetching"><i v-show="!fetching" class="bi bi-arrow-clockwise"></i> <span>Refresh</span></button>
       <button class="nowrap" @click="newRoleModalRef.open()"><i class="bi bi-file-earmark-plus"></i> <span>New Role</span></button>
     </div>
-    <auto-table :data="roles" :columns="roleColumns" :bordered="true" :filter="filter">
+    <auto-table :data="roles" :columns="roleColumns" :bordered="true" :filter="filter" class="nowrap">
       <template #role_name="{ id, role_name }"><router-link :to="'/roles/'+id">{{ role_name }}</router-link></template>
       <template #created_at="{ created_at }">{{ new Date(created_at * 1000).toLocaleString() }}</template>
       <template #updated_at="{ updated_at }">{{ new Date(updated_at * 1000).toLocaleString() }}</template>

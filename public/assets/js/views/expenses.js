@@ -10,7 +10,7 @@ export default {
       <button class="nowrap" @click="fetchExpenses" :aria-busy="fetching" :disabled="fetching"><i v-show="!fetching" class="bi bi-arrow-clockwise"></i> <span>Refresh</span></button>
       <button class="nowrap" @click="newExpenseModalRef.open()"><i class="bi bi-file-earmark-plus"></i> <span>New Expense</span></button>
     </div>
-    <auto-table :data="expenses" :columns="expenseColumns" :bordered="true" :filter="filter">
+    <auto-table :data="expenses" :columns="expenseColumns" :bordered="true" :filter="filter" class="nowrap">
       <template #summary="{ id, summary }"><router-link :to="'/expenses/'+id">{{ summary }}</router-link></template>
       <template #unit_price="{ unit_price }">{{ money(unit_price) }}</template>
       <template #total_amount="{ total_amount }">{{ money(total_amount) }}</template>
