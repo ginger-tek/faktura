@@ -27,7 +27,7 @@ export default {
       </label>
     </div>
     <label>Contact Address
-      <textarea v-model="client.contact_address" :rows="client.contact_address.split('\\n').length || 1"></textarea>
+      <textarea v-model="client.contact_address" :rows="client.contact_address?.split('\\n')?.length || 1"></textarea>
     </label>
   </form>
   <modal ref="deleteModalRef">

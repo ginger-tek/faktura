@@ -16,7 +16,7 @@ export default {
   </div>
   <form v-if="setting" @submit.prevent="updateSetting">
     <label>Value
-      <textarea v-model="setting.setting_value" style="font-family: monospace;" :rows="setting.setting_value.split('\\n').length || 1" required></textarea>
+      <textarea v-model="setting.setting_value" style="font-family: monospace;" :rows="setting.setting_value?.split('\\n')?.length || 1" required></textarea>
     </label>
   </form>
   <modal ref="deleteModalRef">
