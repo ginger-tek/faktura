@@ -53,6 +53,7 @@ class ClientsController
     $client->contact_email = $data->contact_email;
     $client->contact_phone = $data->contact_phone ?? null;
     $client->contact_address = $data->contact_address ?? null;
+    $client->updated_by = $user->id;
     $client = ClientsDataService::update($client);
     return $app->sendJson($client);
   }

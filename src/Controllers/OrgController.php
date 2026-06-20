@@ -28,6 +28,7 @@ class OrgController
     $org->display_name = $body->display_name;
     $org->org_code = $body->org_code;
     $org->logo = $body->logo ?? $org->logo;
+    $org->updated_by = $user->id;
     $org = OrgsDataService::update($org);
     return $app->sendJson($org);
   }

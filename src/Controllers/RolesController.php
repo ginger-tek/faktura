@@ -58,6 +58,7 @@ class RolesController
       return $app->status(404)->sendJson(['error' => 'Role not found']);
     $role->role_name = $data->role_name;
     $role->bit_value = $data->bit_value;
+    $role->updated_by = $user->id;
     $role = RolesDataService::update($role);
     return $app->sendJson($role);
   }

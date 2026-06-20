@@ -157,6 +157,7 @@ class InvoicesController
     $invoice->paid_date = $data->paid_date ?? $invoice->paid_date;
     $invoice->labor_hours = $data->labor_hours ?? $invoice->labor_hours;
     $invoice->labor_rate = $data->labor_rate ?? $invoice->labor_rate;
+    $invoice->updated_by = $user->id;
     $invoice = InvoicesDataService::update($invoice);
     return $app->sendJson($invoice);
   }

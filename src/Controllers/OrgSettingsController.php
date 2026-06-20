@@ -52,6 +52,7 @@ class OrgSettingsController
     if (!$setting)
       return $app->status(404)->sendJson(['error' => 'Setting not found']);
     $setting->setting_value = $body->setting_value;
+    $setting->updated_by = $user->id;
     $setting = OrgSettingsDataService::update($setting);
     return $app->sendJson($setting);
   }

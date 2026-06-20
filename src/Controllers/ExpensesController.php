@@ -61,6 +61,7 @@ class ExpensesController
     $expense->quantity = $data->quantity;
     $expense->unit_price = $data->unit_price;
     $expense->purchase_date = $data->purchase_date;
+    $expense->updated_by = $user->id;
     $expense = ExpensesDataService::update($expense);
     return $app->sendJson($expense);
   }
