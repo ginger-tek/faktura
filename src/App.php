@@ -13,22 +13,17 @@ $app = new \GingerTek\Routy;
 
 try {
   $app->group('/api', function () use ($app) {
-    $app->post('/login', \Faktura\Controllers\AuthController::submitLogin(...));
-    $app->post('/find-org', \Faktura\Controllers\AuthController::findOrg(...));
+    $app->group('/auth', \Faktura\Routes\AuthRoutes::index(...));
 
-    $app->use(\Faktura\Middleware\AuthMiddleware::authenticate(...));
-
-    $app->get('/me', \Faktura\Controllers\AuthController::me(...));
-    $app->post('/logout', \Faktura\Controllers\AuthController::submitLogout(...));
-    $app->post('/me/password', \Faktura\Controllers\UsersController::updatePassword(...));
-
-    $app->group('/invoices', \Faktura\Routes\InvoiceRoutes::index(...));
-    $app->group('/expenses', \Faktura\Routes\ExpenseRoutes::index(...));
-    $app->group('/clients', \Faktura\Routes\ClientRoutes::index(...));
-    $app->group('/users', \Faktura\Routes\UserRoutes::index(...));
-    $app->group('/roles', \Faktura\Routes\RoleRoutes::index(...));
-    $app->group('/org/current', \Faktura\Routes\OrgRoutes::index(...));
-    $app->group('/settings', \Faktura\Routes\OrgSettingRoutes::index(...));
+    $app->group('/', \Faktura\Middleware\AuthMiddleware::authenticate(...), function () use ($app) {
+      $app->group('/invoices', \Faktura\Routes\InvoiceRoutes::index(...));
+      $app->group('/expenses', \Faktura\Routes\ExpenseRoutes::index(...));
+      $app->group('/clients', \Faktura\Routes\ClientRoutes::index(...));
+      $app->group('/users', \Faktura\Routes\UserRoutes::index(...));
+      $app->group('/roles', \Faktura\Routes\RoleRoutes::index(...));
+      $app->group('/org', \Faktura\Routes\OrgRoutes::index(...));
+      $app->group('/settings', \Faktura\Routes\OrgSettingRoutes::index(...));
+    });
 
     $app->fallback(fn() => $app->sendJson(['error' => 'Route not found']));
   });
