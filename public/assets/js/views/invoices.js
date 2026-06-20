@@ -1,5 +1,5 @@
 import { appendToast, clearToasts } from '../comps/toasts.js'
-import { api, money } from '../utils.js'
+import { api, toMoney } from '../utils.js'
 
 export default {
   template: `<div>
@@ -12,9 +12,9 @@ export default {
     <auto-table :data="invoices" :columns="invoiceColumns" :bordered="true" :filter="filter" class="nowrap">
       <template #id="{ id }"><router-link :to="'/invoices/'+id">{{ id }}</router-link></template>
       <template #client_full_name="{ client_id, client_full_name }"><router-link :to="'/clients/'+client_id">{{ client_full_name }}</router-link></template>
-      <template #labor_amount="{ labor_amount }">{{ money(labor_amount) }}</template>
-      <template #expense_amount="{ expense_amount }">{{ money(expense_amount) }}</template>
-      <template #total_amount="{ total_amount }">{{ money(total_amount) }}</template>
+      <template #labor_amount="{ labor_amount }">{{ toMoney(labor_amount) }}</template>
+      <template #expense_amount="{ expense_amount }">{{ toMoney(expense_amount) }}</template>
+      <template #total_amount="{ total_amount }">{{ toMoney(total_amount) }}</template>
       <template #due_date="{ due_date }">{{ due_date ? new Date(due_date + ' 00:00:00').toLocaleDateString() : '--' }}</template>
       <template #empty-data>No invoices</template>
       <template #empty-filter>No invoices found for that filter</template>
@@ -102,7 +102,7 @@ export default {
 
     return {
       filter, fetching, submitting, invoices, invoiceColumns, newInvoiceModalRef, newInvoice, clients,
-      fetchInvoices, fetchClients, createInvoice, money
+      fetchInvoices, fetchClients, createInvoice, toMoney
     }
   }
 }

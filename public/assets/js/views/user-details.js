@@ -4,34 +4,31 @@ import { appendToast, clearToasts } from '../comps/toasts.js'
 
 export default {
   template: `<div :aria-busy="fetching"></div>
-  <div class="flex stack spread bottom-spacing">
-    <div>
-      <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
-      <h4>{{ user?.display_name }}</h4>
-    </div>
-    <div class="flex" style="gap:.5rem">
-      <button type="button" @click="updateUser" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
-      <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
-    </div>
-  </div>
   <form v-if="user" @submit.prevent="updateUser">
-    <div class="grid">  
-      <label>Display Name
-        <input type="text" v-model="user.display_name" required>
-      </label>
+    <div class="flex stack spread bottom-spacing">
+      <div>
+        <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
+        <h4>{{ user?.display_name || 'Unnamed User' }}</h4>
+      </div>
+      <created-updated :obj="user"></created-updated>
+      <div class="flex" style="gap:.5rem">
+        <button type="submit" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
+        <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
+      </div>
+    </div>
+    <div class="grid">
       <label>Username
         <input type="text" v-model="user.username" required>
       </label>
-      <div>
-        <label>Role</label>
-        <select v-model="user.role_id">
+      <label>Display Name
+        <input type="text" v-model="user.display_name" required>
+      </label>
+      <label>Role
+        <select v-model="user.role_id" required>
           <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.role_name }}</option>
         </select>
-      </div>
+      </label>
     </div>
-    <label>Password (leave blank to keep unchanged)
-      <input type="password" v-model="user.password" placeholder="••••••••">
-    </label>
   </form>
   <modal ref="deleteModalRef">
     <template #title>Confirm Delete</template>

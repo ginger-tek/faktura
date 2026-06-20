@@ -1,4 +1,4 @@
-import { api } from '../utils.js'
+import { api, toDate } from '../utils.js'
 import { appendToast, clearToasts } from '../comps/toasts.js'
 
 export default {
@@ -11,8 +11,8 @@ export default {
     </div>
     <auto-table :data="roles" :columns="roleColumns" :bordered="true" :filter="filter" class="nowrap">
       <template #role_name="{ id, role_name }"><router-link :to="'/roles/'+id">{{ role_name }}</router-link></template>
-      <template #created_at="{ created_at }">{{ new Date(created_at * 1000).toLocaleString() }}</template>
-      <template #updated_at="{ updated_at }">{{ new Date(updated_at * 1000).toLocaleString() }}</template>
+      <template #created_at="{ created_at }">{{ toDate(created_at) }}</template>
+      <template #updated_at="{ updated_at }">{{ toDate(updated_at) }}</template>
       <template #empty-data>No roles</template>
       <template #empty-filter="value">No roles match the filter "{{ value }}"</template>
     </auto-table>
@@ -73,7 +73,7 @@ export default {
 
     return {
       roles, roleColumns, filter, newRoleModalRef, newRole, fetching, submitting,
-      fetchRoles, createRole
+      fetchRoles, createRole, toDate
     }
   }
 }

@@ -4,17 +4,18 @@ import { appendToast, clearToasts } from '../comps/toasts.js'
 
 export default {
   template: `<div :aria-busy="fetching"></div>
-  <div class="flex stack spread bottom-spacing">
-    <div>
-      <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
-      <h4>{{ expense?.summary }}</h4>
+  <form v-if="expense" @submit.prevent="updateExpense" :readonly="!state.hasOne(['expense_update']) || undefined">
+    <div class="flex stack spread bottom-spacing">
+      <div>
+        <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
+        <h4>{{ expense.summary }}</h4>
+      </div>
+      <created-updated :obj="expense"></created-updated>
+      <div class="flex" style="gap:.5rem">
+        <button type="button" @click="updateExpense" v-if="state.hasOne(['expense_update'])" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
+        <button type="button" @click="deleteModalRef.open()" v-if="state.hasOne(['expense_delete'])" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
+      </div>
     </div>
-    <div class="flex" style="gap:.5rem" v-if="state.hasRoles(['admin','expense_manager'])">
-      <button type="button" @click="updateExpense" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
-      <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
-    </div>
-  </div>
-  <form v-if="expense" @submit.prevent="updateExpense" :readonly="!state.hasRoles(['admin','expense_manager']) || undefined">
     <label>Summary
       <input type="text" v-model="expense.summary" required>
     </label>

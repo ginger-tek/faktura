@@ -1,22 +1,23 @@
 import state from '../state.js'
 import { appendToast, clearToasts } from '../comps/toasts.js'
-import { api, money } from '../utils.js'
+import { api, toMoney, toDate } from '../utils.js'
 
 export default {
   template: `<div :aria-busy="fetching"></div>
-  <div class="flex stack spread bottom-spacing">
-    <div>
-      <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
-      <h4>{{ invoice?.summary }}</h4>
+  <form v-if="invoice" @submit.prevent="updateInvoice" :readonly="!state.hasOne(['invoice_update']) || undefined">
+    <div class="flex stack spread bottom-spacing">
+      <div>
+        <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
+        <h4 class="bottom-clear">{{ invoice.summary }}</h4>
+      </div>
+      <created-updated :obj="invoice"></created-updated>
+      <div class="flex" style="gap:.5rem">
+        <button type="button" @click="cloneModalRef.open()" class="nowrap"><i class="bi bi-copy"></i> <span>Clone</span></button>
+        <button type="button" @click="printInvoice" class="nowrap"><i class="bi bi-printer"></i> <span>Print</span></button>
+        <button type="submit" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> <span>Save</span></button>
+        <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> <span>Delete</span></button>
+      </div>
     </div>
-    <div class="flex" style="gap:.5rem">
-      <button type="button" @click="cloneModalRef.open()" class="nowrap"><i class="bi bi-copy"></i> <span>Clone</span></button>
-      <button type="button" @click="printInvoice" class="nowrap"><i class="bi bi-printer"></i> <span>Print</span></button>
-      <button type="button" @click="updateInvoice" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> <span>Save</span></button>
-      <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> <span>Delete</span></button>
-    </div>
-  </div>
-  <form v-if="invoice" @submit.prevent="updateInvoice" :readonly="!state.hasRoles(['admin','invoice_manager']) || undefined">
     <div class="grid">
       <label class="clear-children">Summary
         <input type="text" class="bottom-clear" v-model="invoice.summary" required>
@@ -64,22 +65,22 @@ export default {
     <auto-table :data="invoiceItems" :columns="itemColumns" :bordered="true" class="nowrap">
       <template #empty-data>No invoice items</template>
       <template #summary="{ expense_id, summary }"><router-link :to="'/expenses/' + expense_id">{{ summary }}</router-link></template>
-      <template #purchase_date="{ purchase_date }">{{ new Date(purchase_date + ' 00:00:00').toLocaleDateString() }}</template>
-      <template #unit_price="{ unit_price }">{{ money(unit_price) }}</template>
+      <template #purchase_date="{ purchase_date }">{{ toDate(purchase_date, 'date') }}</template>
+      <template #unit_price="{ unit_price }">{{ toMoney(unit_price) }}</template>
       <template #total_amount="{ total_amount, expense_id }">
-        {{ money(total_amount) }}
+        {{ toMoney(total_amount) }}
         <div style="float:right" data-tooltip="Remove Expense" data-placement="left"><i class="bi bi-x-circle danger-text pointer" @click="removeExpense({ expense_id })"></i></div>
       </template>
     </auto-table>
     <article class="flex alert info top-spacing" style="max-inline-size:max-content;margin-inline:auto">
       <div class="text-center nowrap">
         <small>Expenses</small>
-        <h3>{{ money(invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
+        <h3>{{ toMoney(invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
       </div>
       <div></div>
       <div class="text-center nowrap">
         <small>Invoice Total</small>
-        <h3>{{ money(invoice.labor_hours * invoice.labor_rate + invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
+        <h3>{{ toMoney(invoice.labor_hours * invoice.labor_rate + invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
       </div>
     </article>
   </form>
@@ -99,7 +100,7 @@ export default {
         <select v-model="selectedExpense.expense_id" required>
           <option value="" disabled>Select an expense</option>
           <option v-for="expense in expenses" :key="expense.id" :value="expense.id">
-            {{ expense.summary }} | {{ money(expense.total_amount) }} | {{ new Date(expense.purchase_date).toLocaleDateString() }}
+            {{ expense.summary }} | {{ toMoney(expense.total_amount) }} | {{ toDate(expense.purchase_date, 'date') }}
           </option>
         </select>
       </label>
@@ -285,7 +286,7 @@ export default {
 
     return {
       state, fetching, cloning, updating, deleting, invoice, invoiceItems, clients, selector, deleteModalRef, itemColumns, selectedExpense, adding, expenses, addExpenseModalRef, cloneModalRef,
-      fetchClients, setClient, fetchInvoiceDetails, updateInvoice, deleteInvoice, printInvoice, addExpense, removeExpense, fetchExpenses, cloneInvoice, money
+      fetchClients, setClient, fetchInvoiceDetails, updateInvoice, deleteInvoice, printInvoice, addExpense, removeExpense, fetchExpenses, cloneInvoice, toMoney, toDate
     }
   }
 }

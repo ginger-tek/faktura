@@ -9,12 +9,12 @@ export default {
       <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
       <h4>{{ client?.full_name }}</h4>
     </div>
-    <div class="flex" style="gap:.5rem" v-if="state.hasRoles(['admin','client_manager'])">
-      <button type="button" @click="updateClient" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
-      <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
+    <div class="flex" style="gap:.5rem">
+      <button type="button" @click="updateClient" v-if="state.hasOne(['client_update'])" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
+      <button type="button" @click="deleteModalRef.open()" v-if="state.hasOne(['client_delete'])" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
     </div>
   </div>
-  <form v-if="client" @submit.prevent="updateClient" :readonly="!state.hasRoles(['admin','client_manager']) || undefined">
+  <form v-if="client" @submit.prevent="updateClient" :readonly="!state.hasOne(['client_update']) || undefined">
     <div class="grid">
       <label>Full Name
         <input type="text" v-model="client.full_name" required>

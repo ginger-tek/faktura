@@ -1,5 +1,5 @@
 import state from '../state.js'
-import { api, money } from '../utils.js'
+import { api, toMoney } from '../utils.js'
 import { appendToast, clearToasts } from '../comps/toasts.js'
 
 export default {
@@ -12,8 +12,8 @@ export default {
     </div>
     <auto-table :data="expenses" :columns="expenseColumns" :bordered="true" :filter="filter" class="nowrap">
       <template #summary="{ id, summary }"><router-link :to="'/expenses/'+id">{{ summary }}</router-link></template>
-      <template #unit_price="{ unit_price }">{{ money(unit_price) }}</template>
-      <template #total_amount="{ total_amount }">{{ money(total_amount) }}</template>
+      <template #unit_price="{ unit_price }">{{ toMoney(unit_price) }}</template>
+      <template #total_amount="{ total_amount }">{{ toMoney(total_amount) }}</template>
       <template #purchase_date="{ purchase_date }">{{ new Date(purchase_date + ' 00:00:00').toLocaleDateString() }}</template>
       <template #empty-data>No expenses</template>
       <template #empty-filter>No expenses found for that filter</template>
@@ -92,7 +92,7 @@ export default {
 
     return {
       filter, fetching, submitting, expenses, expenseColumns, newExpenseModalRef, newExpense,
-      fetchExpenses, createExpense, money
+      fetchExpenses, createExpense, toMoney
     }
   }
 }

@@ -4,30 +4,27 @@ import { appendToast, clearToasts } from '../comps/toasts.js'
 
 export default {
   template: `<div :aria-busy="fetching"></div>
-  <div class="flex stack spread bottom-spacing">
-  <div>
-      <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
-      <h4>{{ role?.role_name }}</h4>
-    </div>
-    <div class="flex" style="gap:.5rem">
-      <button type="button" @click="updateRole" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
-      <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
-    </div>
-  </div>
   <form v-if="role" @submit.prevent="updateRole">
-    <div class="grid">  
-      <label>Label
-        <input type="text" v-model="role.role_name" @input="role.role_name = role.role_name.replace(/\s/g, '-')"  required>
-      </label>
+    <div class="flex stack spread bottom-spacing">
       <div>
-        <label>Permissions ({{ role.bit_value }})</label>
-        <ul class="flex-list">
-          <li v-for="key of Object.keys(permissions)" :key="key">
-            <label><input type="checkbox" :value="permissions[key]" ref="permissionRefs" :checked="(role.bit_value & permissions[key]) !== 0" @change="setBitValue"> {{ key }}</label>
-          </li>
-        </ul>
+        <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
+        <h4>{{ role?.role_name }}</h4>
+      </div>
+      <created-updated :obj="role"></created-updated>
+      <div class="flex" style="gap:.5rem">
+        <button type="button" @click="updateRole" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
+        <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
       </div>
     </div>
+    <label>Label
+      <input type="text" v-model="role.role_name" @input="role.role_name = role.role_name.replace(/\s/g, '-')"  required>
+    </label>
+    <label>Permissions <span :data-tooltip="'Bit: ' + role.bit_value"><i class="bi bi-info-circle"></i></span></label>
+    <ul class="flex-list">
+      <li v-for="key of Object.keys(permissions)" :key="key">
+        <label><input type="checkbox" :value="permissions[key]" ref="permissionRefs" :checked="(role.bit_value & permissions[key]) !== 0" @change="setBitValue"> {{ key }}</label>
+      </li>
+    </ul>
   </form>
   <modal ref="deleteModalRef">
     <template #title>Confirm Delete</template>
