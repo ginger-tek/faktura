@@ -35,7 +35,6 @@ class PermissionsService
   public const int ORG_SETTINGS_READ_ALL = 536870912;
   public const int ORG_SETTINGS_READ = 1073741824;
   public const int ORG_SETTINGS_UPDATE = 2147483648;
-  protected const int ALL = 4294967295;
 
   public static function hasPermission(int $userRoles, ?int $requiredPermission = null): bool
   {
@@ -48,5 +47,35 @@ class PermissionsService
   {
     $reflection = new \ReflectionClass(self::class);
     return $reflection->getConstants(\ReflectionClassConstant::IS_PUBLIC);
+  }
+
+  public static function getAllPermissionsBitValue(): int
+  {
+    $permissions = self::listPermissions();
+    $sum = 0;
+    foreach ($permissions as $value)
+      $sum |= $value;
+    return $sum;
+  }
+
+  public static function getPermissionsByNameFilter(string $filter, ?bool $toBitValue = false): object|int
+  {
+    $permissions = self::listPermissions();
+    $result = [];
+    $sum = 0;
+    foreach ($permissions as $name => $value)
+      if (preg_match("/$filter/", $name) !== false)
+        ($toBitValue ? $sum |= $value : $result[$name] = $value);
+    return $toBitValue ? $sum : (object) $result;
+  }
+
+  public static function toStringArray(int $permissionsBitValue): array
+  {
+    $permissions = self::listPermissions();
+    $result = [];
+    foreach ($permissions as $name => $value)
+      if (self::hasPermission($permissionsBitValue, $value))
+        $result[] = strtolower($name);
+    return $result;
   }
 }
