@@ -7,7 +7,7 @@ use Faktura\Data\Db;
 
 class ClientsDataService
 {
-  public static function create(string $org_id, string $full_name, string $contact_email): object
+  public static function create(array $data): object
   {
     $id = Uuid::uuid4()->toString();
     Db::run("insert into clients (id, org_id, full_name, contact_email, created_by)
