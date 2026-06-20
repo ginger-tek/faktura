@@ -63,9 +63,12 @@ class UsersDataService
   public static function updatePassword(object $user): object
   {
     Db::run("update users set
-      passhash = ?
+      passhash = ?,
+      updated_by = ?,
+      updated_at = (unixepoch())
     where id = ? and org_id = ?", [
       $user->passhash,
+      $user->updated_by,
       $user->id,
       $user->org_id
     ]);
