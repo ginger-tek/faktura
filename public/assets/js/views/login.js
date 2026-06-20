@@ -48,7 +48,7 @@ export default {
           delete body.org_code
           body.org_id = localStorage.getItem('org_id')?.trim()
         }
-        const res = await api('find-org', 'POST', body)
+        const res = await api('auth/find-org', 'POST', body)
         org.value = res
       } catch (ex) {
         console.error(ex)
@@ -62,13 +62,13 @@ export default {
       try {
         clearToasts()
         submitting.value = true
-        const res = await api('login', 'POST', {
+        const res = await api('auth/login', 'POST', {
           org_id: org.value.id.trim(),
           username: username.value.trim(),
           password: password.value.trim(),
           remember: remember.value
         })
-        state.user = await api('me')
+        state.user = await api('auth/me')
         router.push(route.query.redirect || '/')
       } catch (ex) {
         console.error(ex)
