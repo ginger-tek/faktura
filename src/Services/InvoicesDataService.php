@@ -22,11 +22,18 @@ class InvoicesDataService
     return self::getById($id, $data['org_id']);
   }
 
-  public static function clone(object $invoice, string $new_summary): object
+  public static function clone(object $invoice, string $new_summary, string $user_id): object
   {
-    $new_invoice = self::create($invoice->org_id, $invoice->client_id, $new_summary, $invoice->labor_rate);
+    $new_invoice = self::create([
+      'org_id' => $invoice->org_id,
+      'client_id' => $invoice->client_id,
+      'summary' => $new_summary,
+      'labor_rate' => $invoice->labor_rate,
+      'created_by' => $user_id
+    ]);
     $new_invoice->details = $invoice->details;
     $new_invoice->labor_hours = $invoice->labor_hours;
+    $new_invoice->created_by = $user_id;
     $new_invoice = self::update($new_invoice);
     $existingItems = ExpensesDataService::listByInvoiceId($invoice->org_id, $invoice->id);
     foreach ($existingItems as $item)

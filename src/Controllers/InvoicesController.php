@@ -35,7 +35,7 @@ class InvoicesController
     $invoice = InvoicesDataService::getById($id, $user->org_id);
     if (!$invoice)
       return $app->status(404)->sendJson(['error' => 'Invoice not found']);
-    $cloned_invoice = InvoicesDataService::clone($invoice, "Copy of {$invoice->summary}");
+    $cloned_invoice = InvoicesDataService::clone($invoice, "Copy of {$invoice->summary}", $user->id);
     return $app->status(201)->sendJson($cloned_invoice);
   }
 
