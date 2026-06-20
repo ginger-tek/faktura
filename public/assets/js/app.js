@@ -1,4 +1,5 @@
 import state from './state.js'
+import { api } from './utils.js'
 
 export default {
   template: `<header class="container">
@@ -16,18 +17,20 @@ export default {
         <ul>
           <li>
             <details class="dropdown">
-              <summary><i class="bi bi-person-circle"></i> {{ state.user.display_name }}</summary>
+              <summary><img :src="state.org_logo"> <i class="bi bi-person-circle"></i> {{ state.user.display_name }}</summary>
               <ul dir="rtl">
-                <li dir="ltr" v-if="state.hasRoles(['admin','invoice_manager'])"><router-link to="/invoices"><i class="bi bi-file-earmark-text-fill"></i> Invoices</router-link></li>
-                <li dir="ltr" v-if="state.hasRoles(['admin','expense_manager'])"><router-link to="/expenses"><i class="bi bi-receipt"></i> Expenses</router-link></li>
-                <li dir="ltr" v-if="state.hasRoles(['admin','client_manager'])"><router-link to="/clients"><i class="bi bi-person-lines-fill"></i> Clients</router-link></li>
-                <template v-if="state.hasRoles(['admin','user_manager','role_manager','org_settings_manager'])">
+                <li dir="ltr"><router-link to="/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</router-link></li>
+                <li dir="ltr" v-if="state.hasOne(['invoice_read'])"><router-link to="/invoices"><i class="bi bi-file-earmark-text-fill"></i> Invoices</router-link></li>
+                <li dir="ltr" v-if="state.hasOne(['expense_read'])"><router-link to="/expenses"><i class="bi bi-receipt"></i> Expenses</router-link></li>
+                <li dir="ltr" v-if="state.hasOne(['client_read'])"><router-link to="/clients"><i class="bi bi-person-lines-fill"></i> Clients</router-link></li>
+                <template v-if="state.hasOne(['user_read','role_read','org_settings_read'])">
                   <li><hr></li>
-                  <li dir="ltr" v-if="state.hasRoles(['admin','user_manager'])"><router-link to="/users"><i class="bi bi-people-fill"></i> Users</router-link></li>
-                  <li dir="ltr" v-if="state.hasRoles(['admin','role_manager'])"><router-link to="/roles"><i class="bi bi-shield-lock-fill"></i> Roles</router-link></li>
-                  <li dir="ltr" v-if="state.hasRoles(['admin','org_settings_manager'])"><router-link to="/settings"><i class="bi bi-gear-fill"></i> Settings</router-link></li>
+                  <li dir="ltr" v-if="state.hasOne(['user_read'])"><router-link to="/users"><i class="bi bi-people-fill"></i> Users</router-link></li>
+                  <li dir="ltr" v-if="state.hasOne(['role_read'])"><router-link to="/roles"><i class="bi bi-shield-lock-fill"></i> Roles</router-link></li>
+                  <li dir="ltr" v-if="state.hasOne(['org_settings_read'])"><router-link to="/org-settings"><i class="bi bi-gear-fill"></i> Org Settings</router-link></li>
                 </template>
                 <li><hr></li>
+                <li dir="ltr"><router-link to="/settings"><i class="bi bi-person-gear"></i> Settings</router-link></li>
                 <li dir="ltr"><a role="link" @click="submitLogout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
               </ul>
             </details>
@@ -53,7 +56,7 @@ export default {
     const router = VueRouter.useRouter()
 
     const submitLogout = async () => {
-      await fetch('/api/logout', { method: 'POST' })
+      await api('auth/logout', 'POST')
       state.user = null
       router.replace('/login')
     }
