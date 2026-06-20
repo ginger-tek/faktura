@@ -95,8 +95,6 @@ class InvoicesController
   public static function renderPrint(Routy $app)
   {
     $user = $app->getCtx('user');
-    if (!PermissionsService::hasPermission($user->role_bit_value, PermissionsService::INVOICE_READ))
-      return $app->status(403)->sendJson(['error' => 'Forbidden']);
     $id = $app->getParam('id');
     $invoice = InvoicesDataService::getById($id, $user->org_id);
     if (!$invoice)
@@ -140,8 +138,6 @@ class InvoicesController
   public static function update(Routy $app)
   {
     $user = $app->getCtx('user');
-    if (!PermissionsService::hasPermission($user->role_bit_value, PermissionsService::INVOICE_UPDATE))
-      return $app->status(403)->sendJson(['error' => 'Forbidden']);
     $org_id = $user->org_id;
     $id = $app->getParam('id');
     $invoice = InvoicesDataService::getById($id, $org_id);
@@ -165,8 +161,6 @@ class InvoicesController
   public static function delete(Routy $app)
   {
     $user = $app->getCtx('user');
-    if (!PermissionsService::hasPermission($user->role_bit_value, PermissionsService::INVOICE_DELETE))
-      return $app->status(403)->sendJson(['error' => 'Forbidden']);
     $org_id = $user->org_id;
     $id = $app->getParam('id');
     $invoice = InvoicesDataService::getById($id, $org_id);

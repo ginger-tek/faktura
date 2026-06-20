@@ -10,8 +10,6 @@ class OrgSettingsController
   public static function create(Routy $app)
   {
     $user = $app->getCtx('user');
-    if (!PermissionsService::hasPermission($user->role_bit_value, PermissionsService::ORG_SETTINGS_UPDATE))
-      return $app->status(403)->sendJson(['error' => 'Forbidden']);
     $data = $app->getBody();
     if (!isset($data->setting_key, $data->setting_value) || !is_string($data->setting_key) || !is_string($data->setting_value))
       return $app->status(400)->sendJson(['error' => 'Invalid request']);
