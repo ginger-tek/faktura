@@ -7,7 +7,7 @@ use Ramsey\Uuid\Uuid;
 
 class ExpensesDataService
 {
-  public static function create(string $org_id, string $summary, float $unit_price, ?int $quantity = 1, ?string $purchase_date = null): object
+  public static function create(array $data): object
   {
     $id = Uuid::uuid4()->toString();
     $data['purchase_date'] ??= date('Y-m-d');
