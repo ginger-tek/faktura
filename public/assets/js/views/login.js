@@ -19,6 +19,7 @@ export default {
         <input type="text" v-model="username" autofocus required>
       </label>
       <label>Password
+        <peak-password></peak-password>
         <input type="password" v-model="password" required>
       </label>
       <label class="bottom-spacing">
