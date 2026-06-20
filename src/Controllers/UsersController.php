@@ -45,36 +45,24 @@ class UsersController
     return $app->sendJson($users);
   }
 
-  public static function updatePassword(Routy $app)
-  {
-    $user = $app->getCtx('user');
-    $body = $app->getBody();
-    if (
-      !$body || !isset($body->new_password, $body->confirm_new_password)
-      || !is_string($body->new_password) || !is_string($body->confirm_new_password) || $body->new_password !== $body->confirm_new_password
-    )
-      return $app->status(400)->sendJson(['error' => 'Invalid request']);
-    $user = UsersDataService::getById($user->id, $user->org_id);
-    if (!$user)
-      return $app->status(404)->sendJson(['error' => 'User not found']);
-    $user->passhash = password_hash($body->new_password, PASSWORD_BCRYPT);
-    UsersDataService::update($user);
-    return $app->sendJson(['message' => 'Password updated']);
-  }
-
   public static function update(Routy $app)
   {
     $user = $app->getCtx('user');
     $body = $app->getBody();
-    if (!$body || !isset($body->display_name, $body->role_id) || !is_string($body->display_name) || !is_string($body->role_id))
+    if (
+      !$body || !isset($body->username, $body->display_name, $body->role_id)
+      || !is_string($body->username) || !is_string($body->display_name) || !is_string($body->role_id)
+    )
       return $app->status(400)->sendJson(['error' => 'Invalid request']);
-    $user = UsersDataService::getById($user->id, $user->org_id);
-    if (!$user)
+    $userObj = UsersDataService::getById($body->id, $body->org_id);
+    if (!$userObj)
       return $app->status(404)->sendJson(['error' => 'User not found']);
-    $user->display_name = $body->display_name;
-    $user->role_id = $body->role_id;
-    $user = UsersDataService::update($user);
-    return $app->sendJson($user);
+    $userObj->display_name = $body->display_name;
+    $userObj->username = $body->username;
+    $userObj->role_id = $body->role_id;
+    $userObj->updated_by = $user->id;
+    $userObj = UsersDataService::update($userObj);
+    return $app->sendJson($userObj);
   }
 
   public static function delete(Routy $app)
