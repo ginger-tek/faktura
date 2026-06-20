@@ -46,12 +46,15 @@ class ClientsDataService
       full_name = ?,
       contact_email = ?,
       contact_phone = ?,
-      contact_address = ?
+      contact_address = ?,
+      updated_by = ?,
+      updated_at = (unixepoch())
     where id = ? and org_id = ?", [
       $client->full_name,
       $client->contact_email,
       $client->contact_phone,
       $client->contact_address,
+      $client->updated_by,
       $client->id,
       $client->org_id
     ]);

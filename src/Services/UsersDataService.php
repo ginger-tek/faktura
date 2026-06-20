@@ -46,11 +46,14 @@ class UsersDataService
     Db::run("update users set
       username = ?,
       display_name = ?,
-      role_id = ?
+      role_id = ?,
+      updated_by = ?,
+      updated_at = (unixepoch())
     where id = ? and org_id = ?", [
       $user->username,
       $user->display_name,
       $user->role_id,
+      $user->updated_by,
       $user->id,
       $user->org_id
     ]);

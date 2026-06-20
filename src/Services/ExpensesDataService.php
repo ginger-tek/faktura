@@ -69,12 +69,15 @@ class ExpensesDataService
       summary = ?,
       quantity = ?,
       unit_price = ?,
-      purchase_date = ?
+      purchase_date = ?,
+      updated_by = ?,
+      updated_at = (unixepoch())
     where id = ? and org_id = ?", [
       $expense->summary,
       $expense->quantity,
       $expense->unit_price,
       $expense->purchase_date,
+      $expense->updated_by,
       $expense->id,
       $expense->org_id
     ]);

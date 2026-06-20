@@ -40,9 +40,12 @@ class OrgSettingsDataService
   public static function update(object $org_setting): ?object
   {
     Db::run("update org_settings set
-      setting_value = ?
+      setting_value = ?,
+      updated_by = ?,
+      updated_at = (unixepoch())
     where org_id = ? and setting_key = ?", [
       $org_setting->setting_value,
+      $org_setting->updated_by,
       $org_setting->org_id,
       $org_setting->setting_key
     ]);

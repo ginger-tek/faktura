@@ -32,10 +32,12 @@ class OrgsDataService
     Db::run("update orgs set
       display_name = ?,
       logo = ?,
+      updated_by = ?,
       updated_at = (unixepoch())
     where id = ?", [
       $org->display_name,
       $org->logo,
+      $org->updated_by,
       $org->id
     ]);
     return self::getById($org->id);

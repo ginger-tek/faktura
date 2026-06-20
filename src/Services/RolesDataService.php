@@ -36,10 +36,13 @@ class RolesDataService
   {
     Db::run("update roles set
       role_name = ?,
-      bit_value = ?
+      bit_value = ?,
+      updated_by = ?,
+      updated_at = (unixepoch())
     where id = ? and org_id = ?", [
       $role->role_name,
       $role->bit_value,
+      $role->updated_by,
       $role->id,
       $role->org_id
     ]);
