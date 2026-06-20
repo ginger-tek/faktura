@@ -1,6 +1,7 @@
 export default Vue.reactive({
   user: null,
-  hasRoles(roles) {
-    return roles.includes(this.user?.role) || false
+  org_logo: null,
+  hasOne(perms) {
+    return perms.some(perm => this.user?.permissions?.includes(perm)) || false
   }
 })
