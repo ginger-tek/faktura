@@ -23,8 +23,12 @@ class UsersDataService
     return self::getById($id, $data['org_id']);
   }
 
-  public static function getById(string $id, string $org_id): ?object
+  public static function getById(string $id, string $org_id, ?bool $full = false): ?object
   {
+    if ($full) {
+      return Db::run("select * from v_users_full
+      where id = ? and org_id = ?", [$id, $org_id])->fetch() ?: null;
+    }
     return Db::run("select * from v_users
     where id = ? and org_id = ?", [$id, $org_id])->fetch() ?: null;
   }
