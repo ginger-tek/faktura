@@ -10,9 +10,8 @@ import PeakPassword from './js/comps/peak-password.js'
 
 const hasCookie = await cookieStore.get('token_exp')
 if (hasCookie?.name === 'token_exp') {
-  const res = await utils.api('me')
-  state.user = res
-  router.push('/invoices')
+  state.user = await api('auth/me')
+  router.push('/dashboard')
 } else {
   cookieStore.delete('token_exp')
 }
