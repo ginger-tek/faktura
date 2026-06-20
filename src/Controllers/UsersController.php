@@ -32,10 +32,10 @@ class UsersController
   {
     $user = $app->getCtx('user');
     $id = $app->getParam('id');
-    $user = UsersDataService::getById($id, $user->org_id);
-    if (!$user)
+    $userObj = UsersDataService::getById($id, $user->org_id);
+    if (!$userObj)
       return $app->status(404)->sendJson(['error' => 'User not found']);
-    return $app->sendJson($user);
+    return $app->sendJson($userObj);
   }
 
   public static function list(Routy $app)
@@ -81,10 +81,10 @@ class UsersController
   {
     $user = $app->getCtx('user');
     $id = $app->getParam('id');
-    $user = UsersDataService::getById($id, $user->org_id);
-    if (!$user)
+    $userObj = UsersDataService::getById($id, $user->org_id);
+    if (!$userObj)
       return $app->status(404)->sendJson(['error' => 'User not found']);
-    UsersDataService::delete($user);
+    UsersDataService::delete($userObj);
     return $app->sendJson(['message' => 'User deleted']);
   }
 }
