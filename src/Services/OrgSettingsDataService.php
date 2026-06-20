@@ -2,7 +2,6 @@
 
 namespace Faktura\Services;
 
-use Ramsey\Uuid\Uuid;
 use Faktura\Data\Db;
 
 class OrgSettingsDataService
