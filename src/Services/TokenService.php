@@ -7,12 +7,9 @@ use Firebase\JWT\Key;
 
 class TokenService
 {
-  /**
-   * @return array{token: string, exp: int}
-   */
   public static function sign(array $data, ?int $exp = null): array
   {
-    $exp = ($exp ?: 3600) + time();
+    $exp = ($exp ?: (getenv('JWT_EXP') ?: 3600)) + time();
     try {
       $token = JWT::encode(
         [
@@ -25,7 +22,7 @@ class TokenService
         getenv('JWT_SECRET'),
         'HS256'
       );
-      return [$token, $exp];
+      return ['token' => $token, 'exp' => $exp];
     } catch (\Exception $ex) {
       return [];
     }
