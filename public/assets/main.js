@@ -1,5 +1,5 @@
 import state from './js/state.js'
-import utils from './js/utils.js'
+import { api } from './js/utils.js'
 import router from './js/router.js'
 import App from './js/app.js'
 import Modal from './js/comps/modal.js'
