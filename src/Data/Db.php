@@ -6,7 +6,7 @@ class Db
 {
   private static ?\PDO $instance = null;
 
-  public static function get()
+  public static function getInstance()
   {
     if (!self::$instance) {
       $dsn = getenv('DB_DSN');
@@ -30,13 +30,13 @@ class Db
 
   public static function run(string $sql, array $params = []): \PDOStatement
   {
-    $stmt = self::get()->prepare($sql);
+    $stmt = self::getInstance()->prepare($sql);
     $stmt->execute($params);
     return $stmt;
   }
 
   public static function lastInsertId(): string
   {
-    return self::get()->lastInsertId();
+    return self::getInstance()->lastInsertId();
   }
 }
