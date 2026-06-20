@@ -4,7 +4,6 @@ namespace Faktura\Controllers;
 
 use GingerTek\Routy;
 use Faktura\Services\OrgSettingsDataService;
-use Faktura\Services\PermissionsService;
 
 class OrgSettingsController
 {

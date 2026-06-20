@@ -4,7 +4,6 @@ namespace Faktura\Controllers;
 
 use GingerTek\Routy;
 use Faktura\Services\ClientsDataService;
-use Faktura\Services\PermissionsService;
 
 class ClientsController
 {

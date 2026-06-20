@@ -8,7 +8,6 @@ use Faktura\Services\OrgsDataService;
 use Faktura\Services\OrgSettingsDataService;
 use Faktura\Services\ClientsDataService;
 use Faktura\Services\ExpensesDataService;
-use Faktura\Services\PermissionsService;
 use Faktura\Services\UtilsService;
 use Parsedown;
 
