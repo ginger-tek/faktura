@@ -19,6 +19,8 @@ const app = Vue.createApp(App)
   .component('toaster', Toaster)
   .component('auto-table', AutoTable)
   .component('modal', Modal)
+  .component('created-updated', CreatedUpdated)
+  .component('peak-password', PeakPassword)
   .use(router)
 
 app.mount('#app')
