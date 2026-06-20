@@ -123,19 +123,21 @@ drop view if exists v_org_settings;
 create view
   v_org_settings as
 select
-  id,
-  org_id,
-  setting_key,
+  os.id,
+  os.org_id,
+  os.setting_key,
   case
-    when length (setting_value) > 15 then substr (setting_value, 1, 15) || '...'
-    else setting_value
+    when length (os.setting_value) > 15 then substr (os.setting_value, 1, 15) || '...'
+    else os.setting_value
   end as setting_value,
-  created_at,
-  updated_at,
-  created_by,
-  updated_by
+  os.created_at,
+  cu.username as created_by,
+  os.updated_at,
+  uu.username as updated_by
 from
-  org_settings;
+  org_settings os
+  left join users cu on os.created_by = cu.id
+  left join users uu on os.updated_by = uu.id;
 
 drop view if exists v_users;
 
@@ -151,11 +153,42 @@ select
   r.role_name,
   r.bit_value as role_bit_value,
   u.created_at,
-  u.updated_at
+  cu.display_name || '|' || cu.username as created_by,
+  u.updated_at,
+  uu.display_name || '|' || uu.username as updated_by
 from
   users u
   left join roles r on u.role_id = r.id
   left join orgs o on u.org_id = o.id
+  left join users cu on u.created_by = cu.id
+  left join users uu on u.updated_by = uu.id
+group by
+  u.id;
+
+drop view if exists v_users_full;
+
+create view
+  v_users_full as
+select
+  u.id,
+  u.org_id,
+  o.display_name as org_display_name,
+  u.display_name,
+  u.username,
+  u.passhash,
+  u.role_id,
+  r.role_name,
+  r.bit_value as role_bit_value,
+  u.created_at,
+  cu.display_name || '|' || cu.username as created_by,
+  u.updated_at,
+  uu.display_name || '|' || uu.username as updated_by
+from
+  users u
+  left join roles r on u.role_id = r.id
+  left join orgs o on u.org_id = o.id
+  left join users cu on u.created_by = cu.id
+  left join users uu on u.updated_by = uu.id
 group by
   u.id;
 
@@ -180,11 +213,15 @@ select
   i.due_date,
   i.paid_date,
   i.created_at,
-  i.updated_at
+  cu.display_name || '|' || cu.username as created_by,
+  i.updated_at,
+  uu.display_name || '|' || uu.username as updated_by
 from
   invoices i
   join clients c on i.client_id = c.id
   left join v_invoice_itemizations ie on i.id = ie.invoice_id
+  left join users cu on i.created_by = cu.id
+  left join users uu on i.updated_by = uu.id
 group by
   i.id;
 
@@ -206,11 +243,15 @@ select
   i.due_date,
   i.paid_date,
   i.created_at,
-  i.updated_at
+  cu.display_name || '|' || cu.username as created_by,
+  i.updated_at,
+  uu.display_name || '|' || uu.username as updated_by
 from
   invoices i
   join clients c on i.client_id = c.id
   left join v_invoice_itemizations ie on i.id = ie.invoice_id
+  left join users cu on i.created_by = cu.id
+  left join users uu on i.updated_by = uu.id
 group by
   i.id;
 
@@ -227,9 +268,13 @@ select
   (e.quantity * e.unit_price) as total_amount,
   e.purchase_date,
   e.created_at,
-  e.updated_at
+  cu.display_name || '|' || cu.username as created_by,
+  e.updated_at,
+  uu.display_name || '|' || uu.username as updated_by
 from
-  expenses e;
+  expenses e
+  left join users cu on e.created_by = cu.id
+  left join users uu on e.updated_by = uu.id;
 
 drop view if exists v_invoice_itemizations;
 
@@ -246,7 +291,11 @@ select
   e.total_amount,
   e.purchase_date,
   e.created_at as created_at,
-  e.updated_at as updated_at
+  cu.display_name || '|' || cu.username as created_by,
+  e.updated_at as updated_at,
+  uu.display_name || '|' || uu.username as updated_by
 from
   invoice_expenses ie
-  join v_expenses e on ie.expense_id = e.id;
+  join v_expenses e on ie.expense_id = e.id
+  left join users cu on e.created_by = cu.id
+  left join users uu on e.updated_by = uu.id;
