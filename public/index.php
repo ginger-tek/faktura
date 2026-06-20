@@ -19,13 +19,25 @@ require_once '../src/App.php';
       --pico-font-size: 100%;
     }
 
-    @media (min-width: 600px) {
+    @media (min-width: 576px) {
       .flex-list {
         columns: 2;
       }
     }
 
-    @media (max-width: 600px) {
+    @media (min-width: 1024px) {
+      .flex-list {
+        columns: 3;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .flex-list {
+        columns: 4;
+      }
+    }
+
+    @media (max-width: 576px) {
       i.bi+span {
         display: none;
       }
