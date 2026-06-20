@@ -9,6 +9,7 @@ export default {
       <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
       <h4>{{ setting?.setting_key }}</h4>
     </div>
+    <created-updated :obj="setting"></created-updated>
     <div class="flex" style="gap:.5rem">
       <button type="button" @click="updateSetting" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
       <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>

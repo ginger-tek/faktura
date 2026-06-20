@@ -1,4 +1,5 @@
-import { api } from '../utils.js'
+import state from '../state.js'
+import { api, toDate } from '../utils.js'
 import { appendToast, clearToasts } from '../comps/toasts.js'
 
 export default {
@@ -22,20 +23,20 @@ export default {
             <label>Logo (Max 3MB)</label>
             <img v-if="org.logo" :src="org.logo" alt="Organization Logo" style="max-inline-size: 200px; max-block-size: 100px; margin-inline:auto; object-fit: contain; display: block; margin-bottom: 0.5rem;">
             <div class="flex">
-              <button type="button" class="inline" @click="fromFile"><i class="bi bi-upload"></i> From Device</button>
-              <button type="button" class="inline" @click="urlModal.open()"><i class="bi bi-link-45deg"></i> From URL</button>
+              <button type="button" class="x-small" @click="fromFile"><i class="bi bi-upload"></i> From Device</button>
+              <button type="button" class="x-small" @click="urlModal.open()"><i class="bi bi-link-45deg"></i> From URL</button>
             </div>
           </div>
         </div>
       </form>
     </article>
-    <article>
-      <h2>Settings</h2>
+    <article v-if="state.hasOne(['org_settings_read_all'])">
+      <h2>Organization Settings</h2>
       <input type="search" v-model="filter" placeholder="Filter settings...">
       <auto-table :data="settings" :columns="settingsColumns" :bordered="true" :filter="filter" class="nowrap">
-        <template #setting_key="{ setting_key }"><router-link :to="'/settings/' + setting_key">{{ setting_key }}</router-link></template>
-        <template #created_at="{ created_at }">{{ new Date(created_at * 1000).toLocaleString() }}</template>
-        <template #updated_at="{ updated_at }">{{ new Date(updated_at * 1000).toLocaleString() }}</template>
+        <template #setting_key="{ setting_key }"><router-link :to="'/org-settings/' + setting_key">{{ setting_key }}</router-link></template>
+        <template #created_at="{ created_at }">{{ toDate(created_at) }}</template>
+        <template #updated_at="{ updated_at }">{{ toDate(updated_at) }}</template>
         <template #empty-data>No settings</template>
         <template #empty-filter="value">No settings match the filter "{{ value }}"</template>
       </auto-table>
@@ -66,7 +67,7 @@ export default {
 
     const fetchOrg = async () => {
       try {
-        const res = await api('org/current')
+        const res = await api('org')
         org.value = res
       } catch (ex) {
         console.error(ex)
@@ -148,7 +149,7 @@ export default {
       try {
         clearToasts()
         submitting.value = true
-        await api('org/current', 'PUT', org.value)
+        await api('org', 'PUT', org.value)
         appendToast('Organization updated successfully', { variant: 'success' })
       } catch (ex) {
         console.error(ex)
@@ -174,8 +175,8 @@ export default {
     })
 
     return {
-      settings, settingsColumns, filter, org, submitting, urlModal,
-      fetchSettings, updateOrg, fromURL, fromFile, cancelUrl
+      state, settings, settingsColumns, filter, org, submitting, urlModal,
+      fetchSettings, updateOrg, fromURL, fromFile, cancelUrl, toDate
     }
   }
 }
