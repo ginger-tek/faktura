@@ -5,6 +5,8 @@ import App from './js/app.js'
 import Modal from './js/comps/modal.js'
 import { Toaster } from './js/comps/toasts.js'
 import AutoTable from './js/comps/auto-table.js'
+import CreatedUpdated from './js/comps/created-updated.js'
+import PeakPassword from './js/comps/peak-password.js'
 
 const hasCookie = await cookieStore.get('token_exp')
 if (hasCookie?.name === 'token_exp') {
