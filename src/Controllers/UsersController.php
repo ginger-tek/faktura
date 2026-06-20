@@ -14,13 +14,18 @@ class UsersController
     $data = $app->getBody();
     if (!isset($data->display_name, $data->username, $data->password))
       return $app->status(400)->sendJson(['error' => 'Invalid request']);
-    $user = UsersDataService::create(
-      $user->org_id,
-      $data->display_name,
-      $data->username,
-      password_hash($data->password, PASSWORD_BCRYPT)
-    );
-    return $app->status(201)->sendJson($user);
+    $defaultRole = RolesDataService::getByName($user->org_id, 'user');
+    if (!$defaultRole)
+      return $app->status(500)->sendJson(['error' => 'Default role not found']);
+    $userObj = UsersDataService::create([
+      'org_id' => $user->org_id,
+      'display_name' => $data->display_name,
+      'username' => $data->username,
+      'passhash' => password_hash($data->password, PASSWORD_BCRYPT),
+      'role_id' => $defaultRole->id,
+      'created_by' => $user->id
+    ]);
+    return $app->status(201)->sendJson($userObj);
   }
 
   public static function get(Routy $app)

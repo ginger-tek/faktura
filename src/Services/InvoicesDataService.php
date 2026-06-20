@@ -6,13 +6,20 @@ use Faktura\Data\Db;
 
 class InvoicesDataService
 {
-  public static function create(string $org_id, string $client_id, string $summary, ?float $labor_rate = null): object
+  public static function create(array $data): object
   {
     $id = strtoupper(uniqid());
-    $labor_rate ??= OrgSettingsDataService::getValueByKey($org_id, 'default_labor_rate');
-    Db::run("insert into invoices (id, org_id, client_id, summary, labor_rate)
-    values (?, ?, ?, ?, ?)", [$id, $org_id, $client_id, $summary, $labor_rate]);
-    return self::getById($id, $org_id);
+    $data['labor_rate'] ??= OrgSettingsDataService::getValueByKey($data['org_id'], 'default_labor_rate');
+    Db::run("insert into invoices (id, org_id, client_id, summary, labor_rate, created_by)
+    values (?, ?, ?, ?, ?, ?)", [
+      $id,
+      $data['org_id'],
+      $data['client_id'],
+      $data['summary'],
+      $data['labor_rate'],
+      $data['created_by']
+    ]);
+    return self::getById($id, $data['org_id']);
   }
 
   public static function clone(object $invoice, string $new_summary): object

@@ -19,11 +19,12 @@ class InvoicesController
     $data = $app->getBody();
     if (!isset($data->client_id, $data->summary) || !is_string($data->client_id) || !is_string($data->summary))
       return $app->status(400)->sendJson(['error' => 'Invalid request']);
-    $invoice = InvoicesDataService::create(
-      $user->org_id,
-      $data->client_id,
-      $data->summary,
-    );
+    $invoice = InvoicesDataService::create([
+      'org_id' => $user->org_id,
+      'client_id' => $data->client_id,
+      'summary' => $data->summary,
+      'created_by' => $user->id
+    ]);
     return $app->status(201)->sendJson($invoice);
   }
 

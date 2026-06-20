@@ -7,12 +7,20 @@ use Faktura\Data\Db;
 
 class UsersDataService
 {
-  public static function create(string $org_id, string $display_name, string $username, string $passhash): object
+  public static function create(array $data): object
   {
     $id = Uuid::uuid4()->toString();
-    Db::run("insert into users (id, org_id, display_name, username, passhash)
-    values (?, ?, ?, ?, ?)", [$id, $org_id, $display_name, $username, $passhash]);
-    return self::getById($id, $org_id);
+    Db::run("insert into users (id, org_id, display_name, username, passhash, role_id, created_by)
+    values (?, ?, ?, ?, ?, ?, ?)", [
+      $id,
+      $data['org_id'],
+      $data['display_name'],
+      $data['username'],
+      $data['passhash'],
+      $data['role_id'],
+      $data['created_by']
+    ]);
+    return self::getById($id, $data['org_id']);
   }
 
   public static function getById(string $id, string $org_id): ?object

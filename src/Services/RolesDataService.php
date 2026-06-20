@@ -7,16 +7,17 @@ use Ramsey\Uuid\Uuid;
 
 class RolesDataService
 {
-  public static function create(string $org_id, string $role_name): object
+  public static function create(array $data): object
   {
     $id = Uuid::uuid4()->toString();
-    Db::run("insert into roles (id, org_id, role_name)
-    values (?, ?, ?)", [
+    Db::run("insert into roles (id, org_id, role_name, created_by)
+    values (?, ?, ?, ?)", [
       $id,
-      $org_id,
-      $role_name
+      $data['org_id'],
+      $data['role_name'],
+      $data['created_by']
     ]);
-    return self::getById($id, $org_id);
+    return self::getById($id, $data['org_id']);
   }
 
   public static function getById(string $id, string $org_id): ?object

@@ -14,10 +14,11 @@ class RolesController
     $data = $app->getBody();
     if (!isset($data->role_name) || !is_string($data->role_name) || preg_match('/[^a-zA-Z_]/', $data->role_name))
       return $app->status(400)->sendJson(['error' => 'Invalid request']);
-    $role = RolesDataService::create(
-      $user->org_id,
-      $data->role_name
-    );
+    $role = RolesDataService::create([
+      'org_id' => $user->org_id,
+      'role_name' => $data->role_name,
+      'created_by' => $user->id
+    ]);
     return $app->status(201)->sendJson($role);
   }
 

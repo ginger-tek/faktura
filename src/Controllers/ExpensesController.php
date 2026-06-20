@@ -16,13 +16,14 @@ class ExpensesController
       || !is_string($data->summary) || !is_numeric($data->unit_price) || !is_numeric($data->quantity) || !is_string($data->purchase_date)
     )
       return $app->status(400)->sendJson(['error' => 'Invalid request']);
-    $expense = ExpensesDataService::create(
-      $user->org_id,
-      $data->summary,
-      $data->unit_price,
-      $data->quantity,
-      $data->purchase_date
-    );
+    $expense = ExpensesDataService::create([
+      'org_id' => $user->org_id,
+      'summary' => $data->summary,
+      'unit_price' => $data->unit_price,
+      'quantity' => $data->quantity,
+      'purchase_date' => $data->purchase_date,
+      'created_by' => $user->id
+    ]);
     return $app->status(201)->sendJson($expense);
   }
 

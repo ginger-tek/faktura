@@ -10,10 +10,18 @@ class ExpensesDataService
   public static function create(string $org_id, string $summary, float $unit_price, ?int $quantity = 1, ?string $purchase_date = null): object
   {
     $id = Uuid::uuid4()->toString();
-    $purchase_date ??= date('Y-m-d');
-    Db::run("insert into expenses (id, org_id, summary, unit_price, quantity, purchase_date)
-    values (?, ?, ?, ?, ?, ?)", [$id, $org_id, $summary, $unit_price, $quantity, $purchase_date]);
-    return self::getById($id, $org_id);
+    $data['purchase_date'] ??= date('Y-m-d');
+    Db::run("insert into expenses (id, org_id, summary, unit_price, quantity, purchase_date, created_by)
+    values (?, ?, ?, ?, ?, ?, ?)", [
+      $id,
+      $data['org_id'],
+      $data['summary'],
+      $data['unit_price'],
+      $data['quantity'],
+      $data['purchase_date'],
+      $data['created_by'],
+    ]);
+    return self::getById($id, $data['org_id']);
   }
 
   public static function getById(string $id, string $org_id): ?object

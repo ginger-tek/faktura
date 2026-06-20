@@ -15,11 +15,12 @@ class OrgSettingsController
     $data = $app->getBody();
     if (!isset($data->setting_key, $data->setting_value) || !is_string($data->setting_key) || !is_string($data->setting_value))
       return $app->status(400)->sendJson(['error' => 'Invalid request']);
-    $setting = OrgSettingsDataService::create(
-      $user->org_id,
-      $data->setting_key,
-      $data->setting_value
-    );
+    $setting = OrgSettingsDataService::create([
+      'org_id' => $user->org_id,
+      'setting_key' => $data->setting_key,
+      'setting_value' => $data->setting_value,
+      'created_by' => $user->id
+    ]);
     return $app->status(201)->sendJson($setting);
   }
 

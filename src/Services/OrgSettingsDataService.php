@@ -7,11 +7,16 @@ use Faktura\Data\Db;
 
 class OrgSettingsDataService
 {
-  public static function create(string $org_id, string $setting_key, string $setting_value): object
+  public static function create(array $data): object
   {
-    Db::run("insert into org_settings (org_id, setting_key, setting_value)
-    values (?, ?, ?)", [$org_id, $setting_key, $setting_value]);
-    return self::getByKey($org_id, $setting_key);
+    Db::run("insert into org_settings (org_id, setting_key, setting_value, created_by)
+    values (?, ?, ?, ?)", [
+      $data['org_id'],
+      $data['setting_key'],
+      $data['setting_value'],
+      $data['created_by']
+    ]);
+    return self::getByKey($data['org_id'], $data['setting_key']);
   }
 
   public static function getByKey(string $org_id, string $setting_key): ?object

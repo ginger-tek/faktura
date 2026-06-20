@@ -13,11 +13,12 @@ class ClientsController
     $data = $app->getBody();
     if (!isset($data->full_name, $data->contact_email) || !is_string($data->full_name) || !is_string($data->contact_email))
       return $app->status(400)->sendJson(['error' => 'Invalid request']);
-    $client = ClientsDataService::create(
-      $user->org_id,
-      $data->full_name,
-      $data->contact_email
-    );
+    $client = ClientsDataService::create([
+      'org_id' => $user->org_id,
+      'full_name' => $data->full_name,
+      'contact_email' => $data->contact_email,
+      'created_by' => $user->id,
+    ]);
     return $app->status(201)->sendJson($client);
   }
 

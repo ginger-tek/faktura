@@ -10,9 +10,15 @@ class ClientsDataService
   public static function create(string $org_id, string $full_name, string $contact_email): object
   {
     $id = Uuid::uuid4()->toString();
-    Db::run("insert into clients (id, org_id, full_name, contact_email)
-    values (?, ?, ?, ?)", [$id, $org_id, $full_name, $contact_email]);
-    return self::getById($id, $org_id);
+    Db::run("insert into clients (id, org_id, full_name, contact_email, created_by)
+    values (?, ?, ?, ?, ?)", [
+      $id,
+      $data['org_id'],
+      $data['full_name'],
+      $data['contact_email'],
+      $data['created_by']
+    ]);
+    return self::getById($id, $data['org_id']);
   }
 
   public static function getById(string $id, string $org_id): ?object
