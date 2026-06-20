@@ -26,6 +26,12 @@ class RolesDataService
     where id = ? and org_id = ?", [$id, $org_id])->fetch() ?: null;
   }
 
+  public static function getByName(string $org_id, string $role_name): ?object
+  {
+    return Db::run("select id from roles
+    where org_id = ? and role_name = ?", [$org_id, $role_name])->fetch() ?: null;
+  }
+
   public static function list(string $org_id): array
   {
     return Db::run("select * from roles
