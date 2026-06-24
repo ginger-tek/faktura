@@ -10,15 +10,17 @@ class UsersDataService
   public static function create(array $data): object
   {
     $id = Uuid::uuid4()->toString();
-    Db::run("insert into users (id, org_id, display_name, username, passhash, role_id, created_by)
-    values (?, ?, ?, ?, ?, ?, ?)", [
+    Db::run("insert into users (id, org_id, display_name, username, passhash, active, role_id, created_by, created_at)
+    values (?, ?, ?, ?, ?, ?, ?, ?, ?)", [
       $id,
       $data['org_id'],
       $data['display_name'],
       $data['username'],
       $data['passhash'],
+      $data['active'] ?? 1,
       $data['role_id'],
-      $data['created_by']
+      $data['created_by'] ?? null,
+      time()
     ]);
     return self::getById($id, $data['org_id']);
   }
@@ -36,7 +38,7 @@ class UsersDataService
   public static function findByUsername(string $username, string $org_id): ?object
   {
     return Db::run("select id, org_id, username, passhash from users
-    where username = ? and org_id = ?", [$username, $org_id])->fetch() ?: null;
+    where username = ? and org_id = ? and active = 1", [$username, $org_id])->fetch() ?: null;
   }
 
   public static function list(string $org_id): array
@@ -50,14 +52,17 @@ class UsersDataService
     Db::run("update users set
       username = ?,
       display_name = ?,
+      active = ?,
       role_id = ?,
       updated_by = ?,
-      updated_at = (unixepoch())
+      updated_at = ?
     where id = ? and org_id = ?", [
       $user->username,
       $user->display_name,
+      $user->active,
       $user->role_id,
       $user->updated_by,
+      time(),
       $user->id,
       $user->org_id
     ]);
@@ -69,10 +74,11 @@ class UsersDataService
     Db::run("update users set
       passhash = ?,
       updated_by = ?,
-      updated_at = (unixepoch())
+      updated_at = ?
     where id = ? and org_id = ?", [
       $user->passhash,
       $user->updated_by,
+      time(),
       $user->id,
       $user->org_id
     ]);
