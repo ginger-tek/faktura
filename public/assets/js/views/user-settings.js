@@ -8,17 +8,22 @@ export default {
     <article class="alert info">
       <i class="bi bi-info-circle"></i> To update your username, please contact your organization administrator
     </article>
-    <form @submit.prevent="updateUser">
-      <label>Display Name
-        <input type="text" v-model="user.display_name" required>
+    <div class="grid bottom-clear">
+      <label>Username
+        <input :value="user.username" disabled readonly>
       </label>
-      <button type="submit" class="bottom-clear" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-check-circle"></i> Save</button>
-    </form>
+      <form @submit.prevent="updateUser" id="user-settings-form" class="clear-children">
+        <label>Display Name
+          <input type="text" v-model="user.display_name" required>
+        </label>
+      </form>
+    </div>
+    <button type="submit" form="user-settings-form" class="bottom-clear" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-check-circle"></i> Save</button>
   </article>
   <article>
     <header><b><i class="bi bi-shield-lock-fill"></i> Security</b></header>
     <article class="alert warning">
-      <i class="bi bi-exclamation-circle"></i> Changing your password will require you to log in again with the new password after saving changes
+      <i class="bi bi-exclamation-circle"></i> Changing your password here will log you out and require you to log in again with the new password after saving changes
     </article>
     <article class="alert info">
       <i class="bi bi-info-circle"></i> Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, one number, and one special character, i.e. <code>!@#$%^&*()+=_-</code>
@@ -42,7 +47,7 @@ export default {
     </form>
   </article>`,
   setup() {
-    const user = Vue.ref({ display_name: state.user.display_name })
+    const user = Vue.ref({ display_name: state.user.display_name, username: state.user.username })
     const passwords = Vue.ref({ current: '', new: '', confirm: '' })
     const updating = Vue.ref(false)
     const updatingPassword = Vue.ref(false)
