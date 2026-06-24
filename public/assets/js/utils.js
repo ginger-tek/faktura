@@ -6,6 +6,8 @@ export const api = async (u, m = null, b = null, t = null) => {
     credentials: 'include'
   })
   let data
+  if (res.status === 401 && !u.match(/^auth\/login$/))
+    return location.reload()
   if (res.headers.get('Content-Type')?.includes('application/json'))
     data = await res.json()
   else
