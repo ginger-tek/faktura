@@ -18,7 +18,6 @@ class Db
           \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ
         ]
       );
-      // self::$instance->exec("PRAGMA foreign_keys = ON");
     }
     return self::$instance;
   }
