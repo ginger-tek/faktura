@@ -41,6 +41,10 @@ require_once '../src/App.php';
       i.bi+span {
         display: none;
       }
+
+      .org-logo+span {
+        display: none;
+      }
     }
 
     .logo {
@@ -54,6 +58,16 @@ require_once '../src/App.php';
         left: .32em;
         top: .45em;
       }
+    }
+
+    .org-logo {
+      width: auto;
+      height: 1.25rem;
+      outline: 1px solid var(--pico-color);
+      border-radius: 50%;
+      vertical-align: -.25em;
+      object-fit: contain;
+      overflow: hidden;
     }
   </style>
 </head>
