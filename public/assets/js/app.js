@@ -4,20 +4,21 @@ import { api } from './utils.js'
 export default {
   template: `<header class="container">
     <nav>
-      <ul>
-        <li><router-link to="/">
-          <div class="logo">
-            <i class="bi bi-currency-dollar"></i>
-            <i class="bi bi-journal"></i>
-          </div>
-          <b>Faktura</b>
-        </router-link></li>
-      </ul>
       <template v-if="state.user?.id">
         <ul>
+          <li><router-link to="/">
+            <div class="logo">
+              <i class="bi bi-currency-dollar"></i>
+              <i class="bi bi-journal"></i>
+            </div>
+            <b>Faktura</b>
+          </router-link></li>
+        </ul>
+        <ul>
+          <li><img v-if="state.user.org_logo" :src="state.user.org_logo" alt="Org Logo" class="org-logo"> <span>{{ state.user.org_display_name }}</span></li>
           <li>
             <details class="dropdown">
-              <summary><img :src="state.org_logo"> <i class="bi bi-person-circle"></i> {{ state.user.display_name }}</summary>
+              <summary><i class="bi bi-person-circle"></i> {{ state.user.display_name }}</summary>
               <ul dir="rtl">
                 <li dir="ltr"><router-link to="/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</router-link></li>
                 <li dir="ltr" v-if="state.hasOne(['invoice_read'])"><router-link to="/invoices"><i class="bi bi-file-earmark-text-fill"></i> Invoices</router-link></li>
@@ -38,9 +39,16 @@ export default {
         </ul>
       </template>
       <template v-else>
-        <ul>
-          <li><router-link to="/login">Login</router-link></li>
-          <li><router-link to="/signup">Sign Up</router-link></li>
+        <ul style="flex:1;justify-content:center">
+          <li>
+            <h1 class="text-center">
+              <div class="logo">
+                <i class="bi bi-currency-dollar"></i>
+                <i class="bi bi-journal"></i>
+              </div>
+              <b>Faktura</b>
+            </h1>
+          </li>
         </ul>
       </template>
     </nav>
@@ -50,7 +58,7 @@ export default {
     <toaster></toaster>
   </main>
   <footer class="container bottom-spacing">
-    <small>&copy; GingerTek Solutions</small>
+    <small>&copy; <a href="https://gingerteksolutions.com" target="_blank">GingerTek Solutions</a></small>
   </footer>`,
   setup() {
     const router = VueRouter.useRouter()
