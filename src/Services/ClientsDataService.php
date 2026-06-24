@@ -10,20 +10,21 @@ class ClientsDataService
   public static function create(array $data): object
   {
     $id = Uuid::uuid4()->toString();
-    Db::run("insert into clients (id, org_id, full_name, contact_email, created_by)
-    values (?, ?, ?, ?, ?)", [
+    Db::run("insert into clients (id, org_id, full_name, contact_email, created_by, created_at)
+    values (?, ?, ?, ?, ?, ?)", [
       $id,
       $data['org_id'],
       $data['full_name'],
       $data['contact_email'],
-      $data['created_by']
+      $data['created_by'],
+      time()
     ]);
     return self::getById($id, $data['org_id']);
   }
 
   public static function getById(string $id, string $org_id): ?object
   {
-    return Db::run("select * from clients
+    return Db::run("select * from v_clients
     where id = ? and org_id = ?", [$id, $org_id])->fetch() ?: null;
   }
 
@@ -36,7 +37,7 @@ class ClientsDataService
 
   public static function list(string $org_id): array
   {
-    return Db::run("select * from clients
+    return Db::run("select * from v_clients
     where org_id = ?", [$org_id])->fetchAll();
   }
 
@@ -48,13 +49,14 @@ class ClientsDataService
       contact_phone = ?,
       contact_address = ?,
       updated_by = ?,
-      updated_at = (unixepoch())
+      updated_at = ?
     where id = ? and org_id = ?", [
       $client->full_name,
       $client->contact_email,
       $client->contact_phone,
       $client->contact_address,
       $client->updated_by,
+      time(),
       $client->id,
       $client->org_id
     ]);
