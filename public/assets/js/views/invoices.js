@@ -1,5 +1,5 @@
 import { appendToast, clearToasts } from '../comps/toasts.js'
-import { api, toMoney } from '../utils.js'
+import { api, toMoney, toDate } from '../utils.js'
 
 export default {
   template: `<div>
@@ -10,12 +10,13 @@ export default {
       <button class="nowrap" @click="newInvoiceModalRef.open()"><i class="bi bi-file-earmark-plus"></i> <span>New Invoice</span></button>
     </div>
     <auto-table :data="invoices" :columns="invoiceColumns" :bordered="true" :filter="filter" class="nowrap">
-      <template #id="{ id }"><router-link :to="'/invoices/'+id">{{ id }}</router-link></template>
+      <template #id="{ id, summary }"><router-link :to="'/invoices/'+id">{{ summary }}</router-link></template>
       <template #client_full_name="{ client_id, client_full_name }"><router-link :to="'/clients/'+client_id">{{ client_full_name }}</router-link></template>
       <template #labor_amount="{ labor_amount }">{{ toMoney(labor_amount) }}</template>
       <template #expense_amount="{ expense_amount }">{{ toMoney(expense_amount) }}</template>
       <template #total_amount="{ total_amount }">{{ toMoney(total_amount) }}</template>
-      <template #due_date="{ due_date }">{{ due_date ? new Date(due_date + ' 00:00:00').toLocaleDateString() : '--' }}</template>
+      <template #paid_amount="{ paid_amount }">{{ toMoney(paid_amount) }}</template>
+      <template #due_date="{ due_date }">{{ toDate(due_date, 'date') }}</template>
       <template #empty-data>No invoices</template>
       <template #empty-filter>No invoices found for that filter</template>
     </auto-table>
@@ -44,12 +45,12 @@ export default {
     const fetching = Vue.ref(false)
     const submitting = Vue.ref(false)
     const invoiceColumns = [
-      { key: 'id', label: 'Invoice #' },
-      { key: 'summary', label: 'Summary' },
+      { key: 'id', label: 'Invoice' },
       { key: 'client_full_name', label: 'Client' },
       { key: 'labor_amount', label: 'Labor' },
-      { key: 'expense_amount', label: 'Expense' },
+      { key: 'expense_amount', label: 'Expenses' },
       { key: 'total_amount', label: 'Total' },
+      { key: 'paid_amount', label: 'Paid' },
       { key: 'due_date', label: 'Due' }
     ]
     const newInvoiceModalRef = Vue.ref(null)
@@ -102,7 +103,7 @@ export default {
 
     return {
       filter, fetching, submitting, invoices, invoiceColumns, newInvoiceModalRef, newInvoice, clients,
-      fetchInvoices, fetchClients, createInvoice, toMoney
+      fetchInvoices, fetchClients, createInvoice, toMoney, toDate
     }
   }
 }
