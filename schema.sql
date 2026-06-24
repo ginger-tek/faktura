@@ -1,301 +1,359 @@
-create table
-  if not exists orgs (
-    id text primary key,
-    org_code text not null unique,
-    display_name text not null,
-    logo text,
-    created_at integer default (unixepoch ()),
-    updated_at integer default (unixepoch ())
-  );
+CREATE TABLE IF NOT EXISTS orgs (
+  id CHAR(36) PRIMARY KEY,
+  org_code CHAR(36) NOT NULL UNIQUE,
+  display_name VARCHAR(255) NOT NULL,
+  logo TEXT,
+  created_at BIGINT,
+  updated_at BIGINT
+);
 
-create table
-  if not exists org_settings (
-    id integer primary key,
-    org_id text not null,
-    setting_key text not null,
-    setting_value text,
-    created_at integer default (unixepoch ()),
-    updated_at integer default (unixepoch ()),
-    created_by text,
-    updated_by text,
-    unique (org_id, setting_key),
-    foreign key (org_id) references orgs (id) on delete cascade
-  );
+CREATE TABLE IF NOT EXISTS roles (
+  id CHAR(36) PRIMARY KEY,
+  org_id CHAR(36) NOT NULL,
+  role_name VARCHAR(255) NOT NULL,
+  bit_value BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  created_at BIGINT,
+  updated_at BIGINT,
+  created_by CHAR(36),
+  updated_by CHAR(36),
+  UNIQUE KEY uq_roles_org_role_name (org_id, role_name),
+  CONSTRAINT fk_roles_org FOREIGN KEY (org_id) REFERENCES orgs (id) ON DELETE CASCADE
+);
 
-create table
-  if not exists users (
-    id text primary key,
-    org_id text not null,
-    active integer default 1,
-    display_name text not null,
-    username text not null unique,
-    passhash text not null,
-    role_id text not null,
-    created_at integer default (unixepoch ()),
-    updated_at integer default (unixepoch ()),
-    created_by text,
-    updated_by text,
-    foreign key (org_id) references orgs (id) on delete cascade,
-    foreign key (role_id) references roles (id) on delete set null
-  );
+CREATE TABLE IF NOT EXISTS users (
+  id CHAR(36) PRIMARY KEY,
+  org_id CHAR(36) NOT NULL,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  display_name VARCHAR(255) NOT NULL,
+  username VARCHAR(191) NOT NULL UNIQUE,
+  passhash VARCHAR(255) NOT NULL,
+  role_id CHAR(36),
+  created_at BIGINT,
+  updated_at BIGINT,
+  created_by CHAR(36),
+  updated_by CHAR(36),
+  CONSTRAINT fk_users_org FOREIGN KEY (org_id) REFERENCES orgs (id) ON DELETE CASCADE,
+  CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE SET NULL
+);
 
-create table
-  if not exists roles (
-    id text primary key,
-    org_id text not null,
-    role_name text not null,
-    bit_value integer default 0,
-    created_at integer default (unixepoch ()),
-    updated_at integer default (unixepoch ()),
-    created_by text,
-    updated_by text,
-    unique (org_id, bit_value),
-    foreign key (org_id) references orgs (id) on delete cascade
-  );
+CREATE TABLE IF NOT EXISTS org_settings (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  org_id CHAR(36) NOT NULL,
+  setting_key VARCHAR(191) NOT NULL,
+  setting_value TEXT,
+  created_at BIGINT,
+  updated_at BIGINT,
+  created_by CHAR(36),
+  updated_by CHAR(36),
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_org_settings_org_key (org_id, setting_key),
+  CONSTRAINT fk_org_settings_org FOREIGN KEY (org_id) REFERENCES orgs (id) ON DELETE CASCADE
+);
 
-create table
-  if not exists clients (
-    id text primary key,
-    org_id text not null,
-    full_name text not null,
-    contact_email text not null,
-    contact_phone text,
-    contact_address text,
-    created_at integer default (unixepoch ()),
-    updated_at integer default (unixepoch ()),
-    created_by text,
-    updated_by text,
-    foreign key (org_id) references orgs (id) on delete cascade
-  );
+CREATE TABLE IF NOT EXISTS clients (
+  id CHAR(36) PRIMARY KEY,
+  org_id CHAR(36) NOT NULL,
+  full_name VARCHAR(255) NOT NULL,
+  contact_email VARCHAR(255) NOT NULL,
+  contact_phone VARCHAR(64),
+  contact_address TEXT,
+  created_at BIGINT,
+  updated_at BIGINT,
+  created_by CHAR(36),
+  updated_by CHAR(36),
+  CONSTRAINT fk_clients_org FOREIGN KEY (org_id) REFERENCES orgs (id) ON DELETE CASCADE
+);
 
-create table
-  if not exists invoices (
-    id text primary key,
-    org_id text not null,
-    client_id text not null,
-    summary text not null,
-    details text,
-    labor_hours int default 1,
-    labor_rate decimal default 0.00,
-    due_date integer,
-    paid_date integer,
-    created_at integer default (unixepoch ()),
-    updated_at integer default (unixepoch ()),
-    created_by text,
-    updated_by text,
-    unique (org_id, id),
-    foreign key (org_id) references orgs (id) on delete cascade
-  );
+CREATE TABLE IF NOT EXISTS invoices (
+  id CHAR(13) PRIMARY KEY,
+  org_id CHAR(36) NOT NULL,
+  client_id CHAR(36) NOT NULL,
+  summary VARCHAR(255) NOT NULL,
+  details TEXT,
+  labor_hours INT NOT NULL DEFAULT 1,
+  labor_rate DOUBLE NOT NULL DEFAULT 0.00,
+  due_date CHAR(10),
+  paid_date CHAR(10),
+  paid_amount DOUBLE NOT NULL DEFAULT 0.00,
+  created_at BIGINT,
+  updated_at BIGINT,
+  created_by CHAR(36),
+  updated_by CHAR(36),
+  UNIQUE KEY uq_invoices_org_id (org_id, id),
+  CONSTRAINT fk_invoices_org FOREIGN KEY (org_id) REFERENCES orgs (id) ON DELETE CASCADE,
+  CONSTRAINT fk_invoices_client FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE
+);
 
-create table
-  if not exists expenses (
-    id text primary key,
-    org_id text not null,
-    summary text not null,
-    quantity integer default 1,
-    unit_price decimal not null,
-    purchase_date integer default (unixepoch ()),
-    created_at integer default (unixepoch ()),
-    updated_at integer default (unixepoch ()),
-    created_by text,
-    updated_by text,
-    foreign key (org_id) references orgs (id) on delete cascade
-  );
+CREATE TABLE IF NOT EXISTS expenses (
+  id CHAR(36) PRIMARY KEY,
+  org_id CHAR(36) NOT NULL,
+  summary VARCHAR(255) NOT NULL,
+  quantity INT NOT NULL DEFAULT 1,
+  unit_price DOUBLE NOT NULL,
+  purchase_date CHAR(10),
+  created_at BIGINT,
+  updated_at BIGINT,
+  created_by CHAR(36),
+  updated_by CHAR(36),
+  CONSTRAINT fk_expenses_org FOREIGN KEY (org_id) REFERENCES orgs (id) ON DELETE CASCADE
+);
 
-create table
-  if not exists invoice_expenses (
-    id int primary key,
-    org_id text not null,
-    invoice_id text not null,
-    expense_id text not null,
-    created_at integer default (unixepoch ()),
-    updated_at integer default (unixepoch ()),
-    created_by text,
-    updated_by text,
-    unique (org_id, invoice_id, expense_id),
-    foreign key (invoice_id) references invoices (id) on delete cascade,
-    foreign key (expense_id) references expenses (id) on delete cascade,
-    foreign key (org_id) references orgs (id) on delete cascade
-  );
+CREATE TABLE IF NOT EXISTS invoice_expenses (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  org_id CHAR(36) NOT NULL,
+  invoice_id CHAR(13) NOT NULL,
+  expense_id CHAR(36) NOT NULL,
+  created_at BIGINT,
+  updated_at BIGINT,
+  created_by CHAR(36),
+  updated_by CHAR(36),
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_invoice_expenses_org_invoice_expense (org_id, invoice_id, expense_id),
+  CONSTRAINT fk_invoice_expenses_invoice FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE,
+  CONSTRAINT fk_invoice_expenses_expense FOREIGN KEY (expense_id) REFERENCES expenses (id) ON DELETE CASCADE,
+  CONSTRAINT fk_invoice_expenses_org FOREIGN KEY (org_id) REFERENCES orgs (id) ON DELETE CASCADE
+);
 
-drop view if exists v_org_settings;
+DROP VIEW IF EXISTS v_org_settings;
 
-create view
-  v_org_settings as
-select
+CREATE VIEW v_org_settings AS
+SELECT
   os.id,
   os.org_id,
   os.setting_key,
-  case
-    when length (os.setting_value) > 15 then substr (os.setting_value, 1, 15) || '...'
-    else os.setting_value
-  end as setting_value,
+  os.setting_value,
   os.created_at,
-  cu.username as created_by,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
   os.updated_at,
-  uu.username as updated_by
-from
-  org_settings os
-  left join users cu on os.created_by = cu.id
-  left join users uu on os.updated_by = uu.id;
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM org_settings os
+LEFT JOIN users cu ON os.created_by = cu.id
+LEFT JOIN users uu ON os.updated_by = uu.id;
 
-drop view if exists v_users;
+DROP VIEW IF EXISTS v_org_settings_list;
 
-create view
-  v_users as
-select
+CREATE VIEW v_org_settings_list AS
+SELECT
+  os.id,
+  os.org_id,
+  os.setting_key,
+  CASE
+    WHEN LENGTH(os.setting_value) > 15 THEN CONCAT(SUBSTRING(os.setting_value, 1, 15), '...')
+    ELSE os.setting_value
+  END AS setting_value,
+  os.created_at,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
+  os.updated_at,
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM org_settings os
+LEFT JOIN users cu ON os.created_by = cu.id
+LEFT JOIN users uu ON os.updated_by = uu.id;
+
+DROP VIEW IF EXISTS v_users;
+
+CREATE VIEW v_users AS
+SELECT
   u.id,
   u.org_id,
-  o.display_name as org_display_name,
+  o.display_name AS org_display_name,
   u.display_name,
   u.username,
+  u.active,
   u.role_id,
   r.role_name,
-  r.bit_value as role_bit_value,
+  r.bit_value AS role_bit_value,
   u.created_at,
-  cu.display_name || '|' || cu.username as created_by,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
   u.updated_at,
-  uu.display_name || '|' || uu.username as updated_by
-from
-  users u
-  left join roles r on u.role_id = r.id
-  left join orgs o on u.org_id = o.id
-  left join users cu on u.created_by = cu.id
-  left join users uu on u.updated_by = uu.id
-group by
-  u.id;
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM users u
+LEFT JOIN roles r ON u.role_id = r.id
+LEFT JOIN orgs o ON u.org_id = o.id
+LEFT JOIN users cu ON u.created_by = cu.id
+LEFT JOIN users uu ON u.updated_by = uu.id;
 
-drop view if exists v_users_full;
+DROP VIEW IF EXISTS v_users_full;
 
-create view
-  v_users_full as
-select
+CREATE VIEW v_users_full AS
+SELECT
   u.id,
   u.org_id,
-  o.display_name as org_display_name,
+  o.display_name AS org_display_name,
   u.display_name,
   u.username,
   u.passhash,
   u.role_id,
   r.role_name,
-  r.bit_value as role_bit_value,
+  r.bit_value AS role_bit_value,
   u.created_at,
-  cu.display_name || '|' || cu.username as created_by,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
   u.updated_at,
-  uu.display_name || '|' || uu.username as updated_by
-from
-  users u
-  left join roles r on u.role_id = r.id
-  left join orgs o on u.org_id = o.id
-  left join users cu on u.created_by = cu.id
-  left join users uu on u.updated_by = uu.id
-group by
-  u.id;
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM users u
+LEFT JOIN roles r ON u.role_id = r.id
+LEFT JOIN orgs o ON u.org_id = o.id
+LEFT JOIN users cu ON u.created_by = cu.id
+LEFT JOIN users uu ON u.updated_by = uu.id;
 
-drop view if exists v_invoices;
+DROP VIEW IF EXISTS v_expenses;
 
-create view
-  v_invoices as
-select
-  i.id,
-  i.org_id,
-  i.client_id,
-  c.full_name as client_full_name,
-  i.summary,
-  i.details,
-  i.labor_hours,
-  i.labor_rate,
-  (i.labor_hours * i.labor_rate) as labor_amount,
-  sum(coalesce(ie.total_amount, 0)) as expense_amount,
-  (
-    (i.labor_hours * i.labor_rate) + sum(coalesce(ie.total_amount, 0))
-  ) as total_amount,
-  i.due_date,
-  i.paid_date,
-  i.created_at,
-  cu.display_name || '|' || cu.username as created_by,
-  i.updated_at,
-  uu.display_name || '|' || uu.username as updated_by
-from
-  invoices i
-  join clients c on i.client_id = c.id
-  left join v_invoice_itemizations ie on i.id = ie.invoice_id
-  left join users cu on i.created_by = cu.id
-  left join users uu on i.updated_by = uu.id
-group by
-  i.id;
-
-drop view if exists v_list_invoices;
-
-create view
-  v_list_invoices as
-select
-  i.id,
-  i.org_id,
-  i.client_id,
-  c.full_name as client_full_name,
-  i.summary,
-  (i.labor_hours * i.labor_rate) as labor_amount,
-  sum(coalesce(ie.total_amount, 0)) as expense_amount,
-  (
-    (i.labor_hours * i.labor_rate) + sum(coalesce(ie.total_amount, 0))
-  ) as total_amount,
-  i.due_date,
-  i.paid_date,
-  i.created_at,
-  cu.display_name || '|' || cu.username as created_by,
-  i.updated_at,
-  uu.display_name || '|' || uu.username as updated_by
-from
-  invoices i
-  join clients c on i.client_id = c.id
-  left join v_invoice_itemizations ie on i.id = ie.invoice_id
-  left join users cu on i.created_by = cu.id
-  left join users uu on i.updated_by = uu.id
-group by
-  i.id;
-
-drop view if exists v_expenses;
-
-create view
-  v_expenses as
-select
+CREATE VIEW v_expenses AS
+SELECT
   e.id,
   e.org_id,
   e.summary,
   e.quantity,
   e.unit_price,
-  (e.quantity * e.unit_price) as total_amount,
+  (e.quantity * e.unit_price) AS total_amount,
   e.purchase_date,
   e.created_at,
-  cu.display_name || '|' || cu.username as created_by,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
   e.updated_at,
-  uu.display_name || '|' || uu.username as updated_by
-from
-  expenses e
-  left join users cu on e.created_by = cu.id
-  left join users uu on e.updated_by = uu.id;
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM expenses e
+LEFT JOIN users cu ON e.created_by = cu.id
+LEFT JOIN users uu ON e.updated_by = uu.id;
 
-drop view if exists v_invoice_itemizations;
+DROP VIEW IF EXISTS v_invoice_itemizations;
 
-create view
-  v_invoice_itemizations as
-select
+CREATE VIEW v_invoice_itemizations AS
+SELECT
   ie.id,
   ie.org_id,
   ie.invoice_id,
-  e.id as expense_id,
+  e.id AS expense_id,
   e.summary,
   e.quantity,
   e.unit_price,
   e.total_amount,
   e.purchase_date,
-  e.created_at as created_at,
-  cu.display_name || '|' || cu.username as created_by,
-  e.updated_at as updated_at,
-  uu.display_name || '|' || uu.username as updated_by
-from
-  invoice_expenses ie
-  join v_expenses e on ie.expense_id = e.id
-  left join users cu on e.created_by = cu.id
-  left join users uu on e.updated_by = uu.id;
+  e.created_at AS created_at,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
+  e.updated_at AS updated_at,
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM invoice_expenses ie
+JOIN v_expenses e ON ie.expense_id = e.id
+LEFT JOIN users cu ON e.created_by = cu.id
+LEFT JOIN users uu ON e.updated_by = uu.id;
+
+DROP VIEW IF EXISTS v_invoices;
+
+CREATE VIEW v_invoices AS
+SELECT
+  i.id,
+  i.org_id,
+  i.client_id,
+  c.full_name AS client_full_name,
+  i.summary,
+  i.details,
+  i.labor_hours,
+  i.labor_rate,
+  (i.labor_hours * i.labor_rate) AS labor_amount,
+  SUM(COALESCE(ie.total_amount, 0)) AS expense_amount,
+  ((i.labor_hours * i.labor_rate) + SUM(COALESCE(ie.total_amount, 0))) AS total_amount,
+  i.paid_amount,
+  i.due_date,
+  i.paid_date,
+  i.created_at,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
+  i.updated_at,
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM invoices i
+JOIN clients c ON i.client_id = c.id
+LEFT JOIN v_invoice_itemizations ie ON i.id = ie.invoice_id
+LEFT JOIN users cu ON i.created_by = cu.id
+LEFT JOIN users uu ON i.updated_by = uu.id
+GROUP BY
+  i.id,
+  i.org_id,
+  i.client_id,
+  c.full_name,
+  i.summary,
+  i.details,
+  i.labor_hours,
+  i.labor_rate,
+  i.due_date,
+  i.paid_date,
+  i.paid_amount,
+  i.created_at,
+  cu.display_name,
+  cu.username,
+  i.updated_at,
+  uu.display_name,
+  uu.username;
+
+DROP VIEW IF EXISTS v_list_invoices;
+
+CREATE VIEW v_list_invoices AS
+SELECT
+  i.id,
+  i.org_id,
+  i.client_id,
+  c.full_name AS client_full_name,
+  i.summary,
+  (i.labor_hours * i.labor_rate) AS labor_amount,
+  SUM(COALESCE(ie.total_amount, 0)) AS expense_amount,
+  ((i.labor_hours * i.labor_rate) + SUM(COALESCE(ie.total_amount, 0))) AS total_amount,
+  i.due_date,
+  i.paid_date,
+  i.paid_amount,
+  i.created_at,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
+  i.updated_at,
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM invoices i
+JOIN clients c ON i.client_id = c.id
+LEFT JOIN v_invoice_itemizations ie ON i.id = ie.invoice_id
+LEFT JOIN users cu ON i.created_by = cu.id
+LEFT JOIN users uu ON i.updated_by = uu.id
+GROUP BY
+  i.id,
+  i.org_id,
+  i.client_id,
+  c.full_name,
+  i.summary,
+  i.labor_hours,
+  i.labor_rate,
+  i.due_date,
+  i.paid_date,
+  i.paid_amount,
+  i.created_at,
+  cu.display_name,
+  cu.username,
+  i.updated_at,
+  uu.display_name,
+  uu.username;
+
+DROP VIEW IF EXISTS v_clients;
+
+CREATE VIEW v_clients AS
+SELECT
+  c.id,
+  c.org_id,
+  c.full_name,
+  c.contact_email,
+  c.contact_phone,
+  c.contact_address,
+  c.created_at,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
+  c.updated_at,
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM clients c
+LEFT JOIN users cu ON c.created_by = cu.id
+LEFT JOIN users uu ON c.updated_by = uu.id;
+
+DROP VIEW IF EXISTS v_roles;
+
+CREATE VIEW v_roles AS
+SELECT
+  r.id,
+  r.org_id,
+  r.role_name,
+  r.bit_value,
+  r.created_at,
+  CONCAT(cu.display_name, '|', cu.username) AS created_by,
+  r.updated_at,
+  CONCAT(uu.display_name, '|', uu.username) AS updated_by
+FROM roles r
+LEFT JOIN users cu ON r.created_by = cu.id
+LEFT JOIN users uu ON r.updated_by = uu.id;
