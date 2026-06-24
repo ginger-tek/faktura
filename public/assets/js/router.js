@@ -28,7 +28,7 @@ router.beforeEach((to, from) => {
   document.title = to.name ? `${to.name} | Faktura` : 'Faktura'
   document.querySelector('nav details')?.removeAttribute('open')
   if (to.meta.auth && !state.user?.id)
-    return '/login' + (!to.path.match(/^(\/login|\/invoices|\/)$/) ? '?redirect=' + to.path : '')
+    return '/login' + (!to.path.match(/^(\/login|\/dashboard|\/)$/) ? '?redirect=' + to.path : '')
   else if ((to.meta?.perms && !state.hasOne(to.meta.perms)))
     return '/unauthorized'
   else if (to.path === '/login' && state.user?.id)
