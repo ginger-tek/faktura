@@ -10,33 +10,22 @@ class OrgsDataService
   public static function create(array $data): object
   {
     $id = Uuid::uuid4()->toString();
-    Db::run("insert into orgs (id, name, org_code, created_by)
+    Db::run("insert into orgs (id, display_name, org_code, created_at)
     values (?, ?, ?, ?)", [
       $id,
-      $data['name'],
+      $data['display_name'],
       $data['org_code'],
-      $data['user_id']
+      time()
     ]);
-    Db::run("insert into org_settings (org_id, setting_key, setting_value, created_by)
-    values (:org_id, 'default_labor_rate', '60.00', :created_by),
-    (:org_id, 'invoice_template', '{{ invoice.items }}', :created_by),
-    (:org_id, 'contact_website', '', :created_by),
-    (:org_id, 'contact_email', '', :created_by),
-    (:org_id, 'contact_phone', '', :created_by),
-    (:org_id, 'contact_address', '', :created_by)", [
-      ':org_id' => $id,
-      ':created_by' => $data['user_id']
-    ]);
-    Db::run("insert into roles (org_id, role_name, bit_value, created_by)
-    values (:org_id, 'admin', :admin_bit_value, :created_by),
-    (:org_id, 'reader', :reader_bit_value, :created_by),
-    (:org_id, 'user', :user_bit_value, :created_by)", [
-      ':org_id' => $id,
-      ':admin_bit_value' => PermissionsService::getAllPermissionsBitValue(),
-      ':reader_bit_value' => PermissionsService::getPermissionsByNameFilter('INVOICE_READ|CLIENT_READ|EXPENSE_READ', true),
-      ':user_bit_value' => PermissionsService::getPermissionsByNameFilter('INVOICE_|CLIENT_|EXPENSE_', true),
-      ':created_by' => $data['user_id']
-    ]);
+    OrgSettingsDataService::create(['org_id' => $id, 'setting_key' => 'default_labor_rate', 'setting_value' => '60.00']);
+    OrgSettingsDataService::create(['org_id' => $id, 'setting_key' => 'invoice_template', 'setting_value' => '{{ invoice.items }}']);
+    OrgSettingsDataService::create(['org_id' => $id, 'setting_key' => 'contact_website', 'setting_value' => '']);
+    OrgSettingsDataService::create(['org_id' => $id, 'setting_key' => 'contact_email', 'setting_value' => '']);
+    OrgSettingsDataService::create(['org_id' => $id, 'setting_key' => 'contact_phone', 'setting_value' => '']);
+    OrgSettingsDataService::create(['org_id' => $id, 'setting_key' => 'contact_address', 'setting_value' => '']);
+    RolesDataService::create(['org_id' => $id, 'role_name' => 'admin', 'bit_value' => PermissionsService::getAllPermissionsBitValue()]);
+    RolesDataService::create(['org_id' => $id, 'role_name' => 'reader', 'bit_value' => PermissionsService::getPermissionsByNameFilter('INVOICE_READ|CLIENT_READ|EXPENSE_READ', true)]);
+    RolesDataService::create(['org_id' => $id, 'role_name' => 'user', 'bit_value' => PermissionsService::getPermissionsByNameFilter('INVOICE_|CLIENT_|EXPENSE_', true)]);
     return self::getById($id);
   }
 
@@ -57,14 +46,18 @@ class OrgsDataService
     Db::run("update orgs set
       display_name = ?,
       logo = ?,
-      updated_by = ?,
-      updated_at = (unixepoch())
+      updated_at = ?
     where id = ?", [
       $org->display_name,
       $org->logo,
-      $org->updated_by,
+      time(),
       $org->id
     ]);
     return self::getById($org->id);
+  }
+
+  public static function delete(string $id, string $org_code): void
+  {
+    Db::run("delete from orgs where id = ? and org_code = ?", [$id, $org_code]);
   }
 }
