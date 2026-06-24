@@ -29,6 +29,10 @@ export default {
         </select>
       </label>
     </div>
+    <label>
+      <input type="checkbox" v-model="user.active" :true-value="1" :false-value="0">
+      Active
+    </label>
   </form>
   <modal ref="deleteModalRef">
     <template #title>Confirm Delete</template>
