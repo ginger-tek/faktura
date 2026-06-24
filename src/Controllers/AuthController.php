@@ -60,6 +60,7 @@ class AuthController
       'username' => $user->username,
       'org_id' => $user->org_id,
       'org_display_name' => $user->org_display_name,
+      'org_logo' => OrgsDataService::getById($user->org_id)->logo,
       'role_name' => $user->role_name,
       'permissions' => PermissionsService::toStringArray($user->role_bit_value),
       'created_at' => $user->created_at,
