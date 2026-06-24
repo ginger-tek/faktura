@@ -11,15 +11,16 @@ class ExpensesDataService
   {
     $id = Uuid::uuid4()->toString();
     $data['purchase_date'] ??= date('Y-m-d');
-    Db::run("insert into expenses (id, org_id, summary, unit_price, quantity, purchase_date, created_by)
-    values (?, ?, ?, ?, ?, ?, ?)", [
+    Db::run("insert into expenses (id, org_id, summary, unit_price, quantity, purchase_date, created_by, created_at)
+    values (?, ?, ?, ?, ?, ?, ?, ?)", [
       $id,
       $data['org_id'],
       $data['summary'],
-      $data['unit_price'],
-      $data['quantity'],
+      (double) $data['unit_price'],
+      (int) $data['quantity'],
       $data['purchase_date'],
       $data['created_by'],
+      time()
     ]);
     return self::getById($id, $data['org_id']);
   }
@@ -71,13 +72,14 @@ class ExpensesDataService
       unit_price = ?,
       purchase_date = ?,
       updated_by = ?,
-      updated_at = (unixepoch())
+      updated_at = ?
     where id = ? and org_id = ?", [
       $expense->summary,
-      $expense->quantity,
-      $expense->unit_price,
+      (int) $expense->quantity,
+      (double) $expense->unit_price,
       $expense->purchase_date,
       $expense->updated_by,
+      time(),
       $expense->id,
       $expense->org_id
     ]);
