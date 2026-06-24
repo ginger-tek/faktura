@@ -8,12 +8,15 @@ import AutoTable from './js/comps/auto-table.js'
 import CreatedUpdated from './js/comps/created-updated.js'
 import PeakPassword from './js/comps/peak-password.js'
 
-const hasCookie = await cookieStore.get('token_exp')
-if (hasCookie?.name === 'token_exp') {
+try {
+  const hasCookie = await cookieStore.get('token_exp')
+  if (!hasCookie) throw new Error('Token expired')
   state.user = await api('auth/me')
   router.push('/dashboard')
-} else {
+} catch (ex) {
+  console.error(ex)
   cookieStore.delete('token_exp')
+  router.push('/login')
 }
 
 const app = Vue.createApp(App)
