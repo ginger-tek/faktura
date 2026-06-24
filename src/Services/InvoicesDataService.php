@@ -69,6 +69,7 @@ class InvoicesDataService
       labor_rate = ?,
       due_date = ?,
       paid_date = ?,
+      paid_amount = ?,
       updated_by = ?,
       updated_at = (unixepoch())
     where id = ? and org_id = ?", [
@@ -79,6 +80,7 @@ class InvoicesDataService
       $invoice->labor_rate,
       $invoice->due_date,
       $invoice->paid_date,
+      $invoice->paid_amount,
       $invoice->updated_by,
       $invoice->id,
       $invoice->org_id

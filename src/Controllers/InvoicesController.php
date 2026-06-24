@@ -151,6 +151,7 @@ class InvoicesController
     $invoice->details = $data->details ?? $invoice->details;
     $invoice->due_date = $data->due_date ?? $invoice->due_date;
     $invoice->paid_date = $data->paid_date ?? $invoice->paid_date;
+    $invoice->paid_amount = $data->paid_amount ?? $invoice->paid_amount;
     $invoice->labor_hours = $data->labor_hours ?? $invoice->labor_hours;
     $invoice->labor_rate = $data->labor_rate ?? $invoice->labor_rate;
     $invoice->updated_by = $user->id;
