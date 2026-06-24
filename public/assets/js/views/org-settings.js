@@ -69,6 +69,8 @@ export default {
       try {
         const res = await api('org')
         org.value = res
+        if (org.value.logo)
+          state.user.org_logo = org.value.logo
       } catch (ex) {
         console.error(ex)
         appendToast(`Failed to get organization: ${ex.error}`, { variant: 'danger', stay: true })
@@ -149,8 +151,10 @@ export default {
       try {
         clearToasts()
         submitting.value = true
-        await api('org', 'PUT', org.value)
+        org.value = await api('org', 'PUT', org.value)
         appendToast('Organization updated successfully', { variant: 'success' })
+        if (org.value.logo)
+          state.user.org_logo = org.value.logo
       } catch (ex) {
         console.error(ex)
         appendToast(`Failed to update organization: ${ex.error}`, { variant: 'danger', stay: true })
