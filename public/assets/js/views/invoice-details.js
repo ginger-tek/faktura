@@ -47,6 +47,9 @@ export default {
       <label>Paid Date
         <input type="date" v-model="invoice.paid_date">
       </label>
+      <label>Paid Amount
+        <input type="number" v-model.number="invoice.paid_amount" step="0.01" min="0">
+      </label>
     </div>
     <div class="grid">
       <label>Labor Hours
