@@ -10,14 +10,15 @@ class InvoicesDataService
   {
     $id = strtoupper(uniqid());
     $data['labor_rate'] ??= OrgSettingsDataService::getValueByKey($data['org_id'], 'default_labor_rate');
-    Db::run("insert into invoices (id, org_id, client_id, summary, labor_rate, created_by)
-    values (?, ?, ?, ?, ?, ?)", [
+    Db::run("insert into invoices (id, org_id, client_id, summary, labor_rate, created_by, created_at)
+    values (?, ?, ?, ?, ?, ?, ?)", [
       $id,
       $data['org_id'],
       $data['client_id'],
       $data['summary'],
-      $data['labor_rate'],
-      $data['created_by']
+      (double) $data['labor_rate'],
+      $data['created_by'],
+      time()
     ]);
     return self::getById($id, $data['org_id']);
   }
@@ -28,7 +29,7 @@ class InvoicesDataService
       'org_id' => $invoice->org_id,
       'client_id' => $invoice->client_id,
       'summary' => $new_summary,
-      'labor_rate' => $invoice->labor_rate,
+      'labor_rate' => (double) $invoice->labor_rate,
       'created_by' => $user_id
     ]);
     $new_invoice->details = $invoice->details;
@@ -71,7 +72,7 @@ class InvoicesDataService
       paid_date = ?,
       paid_amount = ?,
       updated_by = ?,
-      updated_at = (unixepoch())
+      updated_at = ?
     where id = ? and org_id = ?", [
       $invoice->client_id,
       $invoice->summary,
@@ -82,6 +83,7 @@ class InvoicesDataService
       $invoice->paid_date,
       $invoice->paid_amount,
       $invoice->updated_by,
+      time(),
       $invoice->id,
       $invoice->org_id
     ]);
