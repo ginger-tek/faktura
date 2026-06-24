@@ -19,12 +19,13 @@ export const toMoney = (amount = 0) => {
   return amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
 }
 
-export const toDate = (timestamp, format = 'datetime') => {
+export const toDate = (value, format = 'datetime') => {
+  if (!value) return '--'
   let dtObj
-  if (typeof timestamp === 'string')
-    dtObj = new Date(timestamp)
-  else if (typeof timestamp === 'number')
-    dtObj = new Date(timestamp * 1000)
+  if (typeof value === 'string')
+    dtObj = new Date(value.match(/^\d{4}-\d{2}-\d{2}$/) ? value + ' 00:00:00' : value)
+  else if (typeof value === 'number')
+    dtObj = new Date(value * 1000)
   if (format === 'date') return dtObj.toLocaleDateString()
   else if (format === 'time') return dtObj.toLocaleTimeString()
   return dtObj.toLocaleString()
