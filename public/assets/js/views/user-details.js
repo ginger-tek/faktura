@@ -8,9 +8,9 @@ export default {
     <div class="flex stack spread bottom-spacing">
       <div>
         <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
-        <h4>{{ user?.display_name || 'Unnamed User' }}</h4>
+        <h4 class="bottom-clear">{{ user?.display_name || 'Unnamed User' }}</h4>
+        <created-updated :obj="user"></created-updated>
       </div>
-      <created-updated :obj="user"></created-updated>
       <div class="flex" style="gap:.5rem">
         <button type="submit" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
         <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>

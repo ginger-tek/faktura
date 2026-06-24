@@ -4,18 +4,18 @@ import { appendToast, clearToasts } from '../comps/toasts.js'
 
 export default {
   template: `<div :aria-busy="fetching"></div>
-  <div class="flex stack spread bottom-spacing">
-    <div>
-      <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
-      <h4>{{ setting?.setting_key }}</h4>
-    </div>
-    <created-updated :obj="setting"></created-updated>
-    <div class="flex" style="gap:.5rem">
-      <button type="button" @click="updateSetting" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
-      <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
-    </div>
-  </div>
   <form v-if="setting" @submit.prevent="updateSetting">
+    <div class="flex stack spread bottom-spacing">
+      <div>
+        <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
+        <h4 class="bottom-clear">{{ setting.setting_key }}</h4>
+        <created-updated :obj="setting"></created-updated>
+      </div>
+      <div class="flex" style="gap:.5rem">
+        <button type="button" @click="updateSetting" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
+        <button type="button" @click="deleteModalRef.open()" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
+      </div>
+    </div>
     <label>Value
       <textarea v-model="setting.setting_value" style="font-family: monospace;" :rows="setting.setting_value?.split('\\n')?.length || 1" required></textarea>
     </label>

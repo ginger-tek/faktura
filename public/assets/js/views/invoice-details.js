@@ -9,8 +9,9 @@ export default {
       <div>
         <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
         <h4 class="bottom-clear">{{ invoice.summary }}</h4>
+        <small>ID: {{ invoice.id }}</small>
+        <created-updated :obj="invoice"></created-updated>
       </div>
-      <created-updated :obj="invoice"></created-updated>
       <div class="flex" style="gap:.5rem">
         <button type="button" @click="cloneModalRef.open()" class="nowrap"><i class="bi bi-copy"></i> <span>Clone</span></button>
         <button type="button" @click="printInvoice" class="nowrap"><i class="bi bi-printer"></i> <span>Print</span></button>

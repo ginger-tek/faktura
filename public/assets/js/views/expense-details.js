@@ -8,9 +8,9 @@ export default {
     <div class="flex stack spread bottom-spacing">
       <div>
         <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
-        <h4>{{ expense.summary }}</h4>
+        <h4 class="bottom-clear">{{ expense.summary }}</h4>
+        <created-updated :obj="expense"></created-updated>
       </div>
-      <created-updated :obj="expense"></created-updated>
       <div class="flex" style="gap:.5rem">
         <button type="button" @click="updateExpense" v-if="state.hasOne(['expense_update'])" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
         <button type="button" @click="deleteModalRef.open()" v-if="state.hasOne(['expense_delete'])" class="danger nowrap"><i class="bi bi-trash"></i> Delete</button>
