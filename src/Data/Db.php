@@ -9,11 +9,8 @@ class Db
   public static function getInstance()
   {
     if (!self::$instance) {
-      $dsn = getenv('DB_DSN');
-      if (preg_match('/^sqlite:(.*)$/', $dsn, $parts))
-        $dsn = 'sqlite:' . ROOT . '/' . ltrim($parts[1], '/');
       self::$instance = new \PDO(
-        $dsn,
+        getenv('DB_DSN'),
         getenv('DB_USER') ?: null,
         getenv('DB_PASS') ?: null,
         [
@@ -21,9 +18,7 @@ class Db
           \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ
         ]
       );
-      self::$instance->exec("PRAGMA foreign_keys = ON");
-      if (preg_match('/^sqlite/', $dsn))
-        self::$instance->exec(file_get_contents(ROOT . '/schema.sql'));
+      // self::$instance->exec("PRAGMA foreign_keys = ON");
     }
     return self::$instance;
   }
