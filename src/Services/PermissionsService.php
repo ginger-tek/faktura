@@ -64,7 +64,7 @@ class PermissionsService
     $result = [];
     $sum = 0;
     foreach ($permissions as $name => $value)
-      if (preg_match("/$filter/", $name) !== false)
+      if (preg_match("/$filter/", $name))
         ($toBitValue ? $sum |= $value : $result[$name] = $value);
     return $toBitValue ? $sum : (object) $result;
   }
