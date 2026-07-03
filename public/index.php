@@ -14,62 +14,7 @@ require_once '../src/App.php';
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@2.1.1/css/pico.jade.min.css">
   <link rel="stylesheet" href="https://unpkg.com/@ginger-tek/picocss-extras@1.1.9/picocss-extras.css">
   <link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-  <style>
-    :root {
-      --pico-font-size: 100%;
-    }
-
-    @media (min-width: 576px) {
-      .flex-list {
-        columns: 2;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .flex-list {
-        columns: 3;
-      }
-    }
-
-    @media (min-width: 1280px) {
-      .flex-list {
-        columns: 4;
-      }
-    }
-
-    @media (max-width: 576px) {
-      i.bi+span {
-        display: none;
-      }
-
-      .org-logo+span {
-        display: none;
-      }
-    }
-
-    .logo {
-      position: relative;
-      display: inline-block;
-      margin-right: .25em;
-
-      >.bi-currency-dollar {
-        position: absolute;
-        font-size: .65em;
-        left: .32em;
-        top: .45em;
-      }
-    }
-
-    .org-logo {
-      width: auto;
-      height: 1.25rem;
-      outline: 1px solid var(--pico-color);
-      border-radius: 50%;
-      vertical-align: -.25em;
-      object-fit: contain;
-      overflow: hidden;
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 
 <body>
