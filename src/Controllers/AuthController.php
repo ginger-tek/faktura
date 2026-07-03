@@ -99,7 +99,7 @@ class AuthController
       return $app->status(400)->sendJson(['error' => 'New password does not meet requirements']);
     $userObj->passhash = password_hash($body->new, PASSWORD_BCRYPT);
     $userObj->updated_by = $user->id;
-    UsersDataService::updatePassword($userObj);
+    UsersDataService::update($userObj);
     return $app->sendJson(['message' => 'Password updated']);
   }
 
