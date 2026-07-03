@@ -3,19 +3,18 @@
 namespace Faktura\Services;
 
 use Ramsey\Uuid\Uuid;
-use Faktura\Data\Db;
+use Faktura\Data\Crud;
 
 class OrgsDataService
 {
   public static function create(array $data): object
   {
     $id = Uuid::uuid4()->toString();
-    Db::run("insert into orgs (id, display_name, org_code, created_at)
-    values (?, ?, ?, ?)", [
-      $id,
-      $data['display_name'],
-      $data['org_code'],
-      time()
+    Crud::create('orgs', [
+      'id' => $id,
+      'display_name' => $data['display_name'],
+      'org_code' => $data['org_code'],
+      'created_at' => time()
     ]);
     OrgSettingsDataService::create(['org_id' => $id, 'setting_key' => 'default_labor_rate', 'setting_value' => '60.00']);
     OrgSettingsDataService::create(['org_id' => $id, 'setting_key' => 'invoice_template', 'setting_value' => '{{ invoice.items }}']);
@@ -31,33 +30,31 @@ class OrgsDataService
 
   public static function findByCode(string $code): ?object
   {
-    return Db::run("select * from orgs
-    where org_code = ?", [$code])->fetch() ?: null;
+    return Crud::read('orgs', ['org_code' => $code]);
   }
 
   public static function getById(string $id): ?object
   {
-    return Db::run("select * from orgs
-    where id = ?", [$id])->fetch() ?: null;
+    return Crud::read('orgs', ['id' => $id]);
   }
 
   public static function update(object $org): ?object
   {
-    Db::run("update orgs set
-      display_name = ?,
-      logo = ?,
-      updated_at = ?
-    where id = ?", [
-      $org->display_name,
-      $org->logo,
-      time(),
-      $org->id
-    ]);
-    return self::getById($org->id);
+    if (
+      Crud::update('orgs', [
+        'display_name' => $org->display_name,
+        'logo' => $org->logo,
+        'updated_at' => time()
+      ], [
+        'id' => $org->id
+      ])
+    )
+      return self::getById($org->id);
+    return null;
   }
 
-  public static function delete(string $id, string $org_code): void
+  public static function delete(string $id, string $org_code): bool
   {
-    Db::run("delete from orgs where id = ? and org_code = ?", [$id, $org_code]);
+    return Crud::delete('orgs', ['id' => $id, 'org_code' => $org_code]);
   }
 }
