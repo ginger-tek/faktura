@@ -1,0 +1,88 @@
+:root {
+  --pico-font-size: 100%;
+}
+
+@media (min-width: 576px) {
+  .flex-list {
+    columns: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .flex-list {
+    columns: 3;
+  }
+}
+
+@media (min-width: 1280px) {
+  .flex-list {
+    columns: 4;
+  }
+}
+
+@media (max-width: 576px) {
+  i.bi+span {
+    display: none;
+  }
+
+  .org-logo+span {
+    display: none;
+  }
+}
+
+.logo {
+  position: relative;
+  display: inline-block;
+  margin-right: .25rem;
+
+  >.bi-currency-dollar {
+    position: absolute;
+    font-size: .65em;
+    left: .3em;
+    top: .35em;
+  }
+}
+
+.org-logo {
+  width: auto;
+  height: 1.25rem;
+  outline: 1px solid var(--pico-color);
+  border-radius: 50%;
+  vertical-align: -.25rem;
+  object-fit: contain;
+  overflow: hidden;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: auto;
+
+  .today {
+    background-color: var(--pico-primary-background);
+    color: var(--pico-contrast-inverse);
+    font-weight: bold;
+  }
+
+  .item {
+    min-height: 75px;
+    padding: 0 .25em;
+    border: 1px solid #5c5c5c;
+    margin: -1px 0 0 -1px;
+    box-sizing: border-box;
+
+    .total {
+      background-color: var(--pico-info);
+      color: var(--pico-info-contrast);
+      text-shadow: 0 1px 2px var(--pico-info-contrast-light);
+      font-weight: bold;
+      border-radius: var(--pico-border-radius);
+      padding: 0 .25em;
+
+      &.danger {
+        background-color: var(--pico-danger);
+        color: var(--pico-danger-contrast);
+      }
+    }
+  }
+}
