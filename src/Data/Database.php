@@ -2,7 +2,7 @@
 
 namespace Faktura\Data;
 
-class Db
+class Database
 {
   private static ?\PDO $instance = null;
 
