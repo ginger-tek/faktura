@@ -44,7 +44,6 @@ class AuthController
       'name' => $user_dto->display_name,
       'org_id' => $user_dto->org_id,
       'org_display_name' => $user_dto->org_display_name,
-      'permissions' => PermissionsService::toStringArray($user_dto->role_bit_value)
     ], $body->remember ? (30 * 24 * 60 * 60) : null);
     setcookie('token', $token, ['expires' => $exp, 'path' => '/', 'secure' => false, 'httponly' => true]);
     setcookie('token_exp', $exp, ['expires' => $exp, 'path' => '/', 'secure' => false, 'httponly' => false]);
