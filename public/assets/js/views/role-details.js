@@ -9,7 +9,6 @@ export default {
       <div>
         <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
         <h4 class="bottom-clear">{{ role?.role_name }}</h4>
-        <created-updated :obj="role"></created-updated>
       </div>
       <div class="flex" style="gap:.5rem">
         <button type="button" @click="updateRole" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
@@ -25,6 +24,10 @@ export default {
         <label><input type="checkbox" :value="permissions[key]" ref="permissionRefs" :checked="(role.bit_value & permissions[key]) !== 0" @change="setBitValue"> {{ key }}</label>
       </li>
     </ul>
+    <div class="bottom-spacing">
+      <created-updated :obj="role"></created-updated>
+      <small>ID: {{ role?.id }}</small>
+    </div>
   </form>
   <modal ref="deleteModalRef">
     <template #title>Confirm Delete</template>

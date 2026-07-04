@@ -9,7 +9,6 @@ export default {
       <div>
         <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
         <h4 class="bottom-clear">{{ expense.summary }}</h4>
-        <created-updated :obj="expense"></created-updated>
       </div>
       <div class="flex" style="gap:.5rem">
         <button type="button" @click="updateExpense" v-if="state.hasOne(['expense_update'])" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
@@ -29,6 +28,10 @@ export default {
       <label>Purchase Date
         <input type="date" v-model="expense.purchase_date" required>
       </label>
+    </div>
+    <div class="bottom-spacing">
+      <created-updated :obj="expense"></created-updated>
+      <small>ID: {{ expense?.id }}</small>
     </div>
   </form>
   <modal ref="deleteModalRef">

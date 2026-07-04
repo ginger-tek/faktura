@@ -9,7 +9,6 @@ export default {
       <div>
         <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
         <h4 class="bottom-clear">{{ user?.display_name || 'Unnamed User' }}</h4>
-        <created-updated :obj="user"></created-updated>
       </div>
       <div class="flex" style="gap:.5rem">
         <button type="submit" class="nowrap" :aria-busy="updating" :disabled="updating"><i v-if="!updating" class="bi bi-floppy"></i> Save</button>
@@ -33,6 +32,10 @@ export default {
       <input type="checkbox" v-model="user.active" :true-value="1" :false-value="0">
       Active
     </label>
+    <div class="bottom-spacing">
+      <created-updated :obj="user"></created-updated>
+      <small>ID: {{ user?.id }}</small>
+    </div>
   </form>
   <modal ref="deleteModalRef">
     <template #title>Confirm Delete</template>

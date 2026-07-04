@@ -9,8 +9,6 @@ export default {
       <div>
         <div class="bottom-spacing-sm secondary" role="link" @click="$router.back()"><i class="bi bi-arrow-left"></i> Back</div>
         <h4 class="bottom-clear">{{ invoice.summary }}</h4>
-        <small>ID: {{ invoice.id }}</small>
-        <created-updated :obj="invoice"></created-updated>
       </div>
       <div class="flex" style="gap:.5rem">
         <button type="button" @click="cloneModalRef.open()" class="nowrap"><i class="bi bi-copy"></i> <span>Clone</span></button>
@@ -87,6 +85,10 @@ export default {
         <h3>{{ toMoney(invoice.labor_hours * invoice.labor_rate + invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
       </div>
     </article>
+    <div class="bottom-spacing">
+      <created-updated :obj="invoice"></created-updated>
+      <small>ID: {{ invoice?.id }}</small>
+    </div>
   </form>
   <modal ref="cloneModalRef" hide-close>
     <template #title>Clone Invoice</template>
