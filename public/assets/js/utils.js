@@ -15,8 +15,8 @@ export const api = async (u, m = null, b = null, t = null) => {
   return res.ok ? data : Promise.reject({ ...data, status: res.status })
 }
 
-export const toMoney = (amount = 0) => {
-  return amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+export const toCurrency = (amount = 0) => {
+  return amount.toLocaleString(navigator.language || navigator.userLanguage, { style: 'currency', currency: 'USD' })
 }
 
 export const toDate = (value, format = 'datetime') => {
