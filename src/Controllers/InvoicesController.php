@@ -114,18 +114,18 @@ class InvoicesController
           "|Summary|Unit Price|Quantity|Total Amount|",
           "|:---|---:|---:|---:|",
           ...array_map(
-            fn($item) => "|{$item->summary}|" . UtilsService::toUSD($item->unit_price) . "|{$item->quantity}|" . UtilsService::toUSD($item->total_amount) . "|",
+            fn($item) => "|{$item->summary}|" . UtilsService::toCurrency($item->unit_price) . "|{$item->quantity}|" . UtilsService::toCurrency($item->total_amount) . "|",
             InvoicesDataService::listItemizations($invoice->org_id, $invoice->id)
           ),
-          "| | |**Labor**|" . UtilsService::toUSD($invoice->labor_amount) . "|",
-          "| | |**Total**|**" . UtilsService::toUSD($invoice->total_amount) . "**|"
+          "| | |**Labor**|" . UtilsService::toCurrency($invoice->labor_amount) . "|",
+          "| | |**Total**|**" . UtilsService::toCurrency($invoice->total_amount) . "**|"
         ]),
         default => ${$obj}->$field ?? ''
       };
       if ($mod) {
         $val = match ($mod) {
           'date' => date('n/j/Y', strtotime($val)),
-          'currency' => UtilsService::toUSD($val),
+          'currency' => UtilsService::toCurrency($val),
           default => $val
         };
       }
