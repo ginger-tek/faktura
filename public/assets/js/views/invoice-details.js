@@ -1,6 +1,6 @@
 import state from '../state.js'
 import { appendToast, clearToasts } from '../comps/toasts.js'
-import { api, toMoney, toDate } from '../utils.js'
+import { api, toCurrency, toDate } from '../utils.js'
 
 export default {
   template: `<div :aria-busy="fetching"></div>
@@ -68,21 +68,21 @@ export default {
       <template #empty-data>No invoice items</template>
       <template #summary="{ expense_id, summary }"><router-link :to="'/expenses/' + expense_id">{{ summary }}</router-link></template>
       <template #purchase_date="{ purchase_date }">{{ toDate(purchase_date, 'date') }}</template>
-      <template #unit_price="{ unit_price }">{{ toMoney(unit_price) }}</template>
+      <template #unit_price="{ unit_price }">{{ toCurrency(unit_price) }}</template>
       <template #total_amount="{ total_amount, expense_id }">
-        {{ toMoney(total_amount) }}
+        {{ toCurrency(total_amount) }}
         <div style="float:right" data-tooltip="Remove Expense" data-placement="left"><i class="bi bi-x-circle danger-text pointer" @click="removeExpense({ expense_id })"></i></div>
       </template>
     </auto-table>
     <article class="flex alert info top-spacing" style="max-inline-size:max-content;margin-inline:auto">
       <div class="text-center nowrap">
         <small>Expenses</small>
-        <h3>{{ toMoney(invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
+        <h3>{{ toCurrency(invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
       </div>
       <div></div>
       <div class="text-center nowrap">
         <small>Invoice Total</small>
-        <h3>{{ toMoney(invoice.labor_hours * invoice.labor_rate + invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
+        <h3>{{ toCurrency(invoice.labor_hours * invoice.labor_rate + invoiceItems.reduce((sum, item) => sum + item.total_amount, 0)) }}</h3>
       </div>
     </article>
     <div class="bottom-spacing">
@@ -106,7 +106,7 @@ export default {
         <select v-model="selectedExpense.expense_id" required>
           <option value="" disabled>Select an expense</option>
           <option v-for="expense in expenses" :key="expense.id" :value="expense.id">
-            {{ expense.summary }} | {{ toMoney(expense.total_amount) }} | {{ toDate(expense.purchase_date, 'date') }}
+            {{ expense.summary }} | {{ toCurrency(expense.total_amount) }} | {{ toDate(expense.purchase_date, 'date') }}
           </option>
         </select>
       </label>
@@ -292,7 +292,7 @@ export default {
 
     return {
       state, fetching, cloning, updating, deleting, invoice, invoiceItems, clients, selector, deleteModalRef, itemColumns, selectedExpense, adding, expenses, addExpenseModalRef, cloneModalRef,
-      fetchClients, setClient, fetchInvoiceDetails, updateInvoice, deleteInvoice, printInvoice, addExpense, removeExpense, fetchExpenses, cloneInvoice, toMoney, toDate
+      fetchClients, setClient, fetchInvoiceDetails, updateInvoice, deleteInvoice, printInvoice, addExpense, removeExpense, fetchExpenses, cloneInvoice, toCurrency, toDate
     }
   }
 }
