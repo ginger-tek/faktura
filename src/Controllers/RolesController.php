@@ -41,7 +41,6 @@ class RolesController
 
   public static function listPermissions(Routy $app)
   {
-    $user = $app->getCtx('user');
     $permissions = PermissionsService::listPermissions();
     return $app->sendJson($permissions);
   }
