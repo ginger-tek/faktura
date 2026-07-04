@@ -31,8 +31,14 @@ export const toDate = (value, format = 'datetime') => {
   return dtObj.toLocaleString()
 }
 
+export const toYMD = (dateObj) => {
+  if (!dateObj) return '--'
+  return dateObj.toISOString().split('T')[0]
+}
+
 export default {
   api,
-  toMoney,
-  toDate
+  toCurrency,
+  toDate,
+  toYMD
 }
