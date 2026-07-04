@@ -42,7 +42,10 @@ class InvoicesController
   public static function list(Routy $app)
   {
     $user = $app->getCtx('user');
-    $invoices = InvoicesDataService::list($user->org_id);
+    $invoices = InvoicesDataService::list($user->org_id, [
+      'start' => $app->getQuery('start') ?: null,
+      'end' => $app->getQuery('end') ?: null
+    ]);
     return $app->sendJson($invoices);
   }
 
