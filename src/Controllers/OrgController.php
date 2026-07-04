@@ -19,15 +19,15 @@ class OrgController
   public static function updateCurrent(Routy $app)
   {
     $user = $app->getCtx('user');
-    $body = $app->getBody();
-    if (!$body || !isset($body->display_name, $body->org_code) || !is_string($body->display_name) || !is_string($body->org_code))
-      return $app->status(400)->sendJson(['error' => 'Invalid request']);
     $org = OrgsDataService::getById($user->org_id);
     if (!$org)
       return $app->status(404)->sendJson(['error' => 'Organization not found']);
-    $org->display_name = $body->display_name;
-    $org->org_code = $body->org_code;
-    $org->logo = $body->logo ?? $org->logo;
+    $data = $app->getBody();
+    if (!$data || !isset($data->display_name, $data->org_code) || !is_string($data->display_name) || !is_string($data->org_code))
+      return $app->status(400)->sendJson(['error' => 'Invalid request']);
+    $org->display_name = $data->display_name;
+    $org->org_code = $data->org_code;
+    $org->logo = $data->logo ?? $org->logo;
     $org->updated_by = $user->id;
     $org = OrgsDataService::update($org);
     return $app->sendJson($org);

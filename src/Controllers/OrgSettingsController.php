@@ -43,13 +43,13 @@ class OrgSettingsController
   {
     $user = $app->getCtx('user');
     $setting_key = $app->getParam('key');
-    $body = $app->getBody();
-    if (!$body || !isset($body->setting_value) || !is_string($body->setting_value))
-      return $app->status(400)->sendJson(['error' => 'Invalid request']);
     $setting = OrgSettingsDataService::getByKey($user->org_id, $setting_key);
     if (!$setting)
       return $app->status(404)->sendJson(['error' => 'Setting not found']);
-    $setting->setting_value = $body->setting_value;
+    $data = $app->getBody();
+    if (!$data || !isset($data->setting_value) || !is_string($data->setting_value))
+      return $app->status(400)->sendJson(['error' => 'Invalid request']);
+    $setting->setting_value = $data->setting_value;
     $setting->updated_by = $user->id;
     $setting = OrgSettingsDataService::update($setting);
     return $app->sendJson($setting);

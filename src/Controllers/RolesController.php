@@ -49,12 +49,12 @@ class RolesController
   {
     $user = $app->getCtx('user');
     $id = $app->getParam('id');
-    $data = $app->getBody();
-    if (!isset($data->role_name, $data->bit_value) || !is_string($data->role_name) || preg_match('/[^a-zA-Z_]/', $data->role_name) || !is_int($data->bit_value))
-      return $app->status(400)->sendJson(['error' => 'Invalid request']);
     $role = RolesDataService::getById($id, $user->org_id);
     if (!$role)
       return $app->status(404)->sendJson(['error' => 'Role not found']);
+    $data = $app->getBody();
+    if (!isset($data->role_name, $data->bit_value) || !is_string($data->role_name) || preg_match('/[^a-zA-Z_]/', $data->role_name) || !is_int($data->bit_value))
+      return $app->status(400)->sendJson(['error' => 'Invalid request']);
     $role->role_name = $data->role_name;
     $role->bit_value = $data->bit_value;
     $role->updated_by = $user->id;
