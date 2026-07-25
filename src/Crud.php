@@ -25,95 +25,22 @@ class Crud
 
   public static function initSchema(): void
   {
-    $sql = <<<SQL
-    create table if not exists settings (
-      id integer primary key,
-      [key] text not null unique,
-      [value] text not null,
-      created_at integer,
-      updated_at integer
-    );
-    create table if not exists users (
-      id integer primary key,
-      username text not null unique,
-      passhash text not null,
-      tokens text,
-      is_active integer default 1,
-      permissions_bit integer default 0,
-      created_at integer,
-      updated_at integer
-    );
-    create table if not exists clients (
-      id integer primary key,
-      [name] text not null unique,
-      email text not null,
-      phone text,
-      [address] text,
-      created_at integer,
-      updated_at integer
-    );
-    create table if not exists invoices (
-      id integer primary key,
-      [number] text not null,
-      client_id integer not null,
-      summary text not null,
-      details text,
-      labor_amount real default 0,
-      due_date text,
-      paid_date text,
-      paid_amount real default 0,
-      created_at integer,
-      updated_at integer
-    );
-    create table if not exists invoice_items (
-      id integer primary key,
-      invoice_id integer not null,
-      summary text not null,
-      quantity integer default 1,
-      unit_price real not null,
-      is_expense integer default 0,
-      created_at integer,
-      updated_at integer
-    );
-    insert or ignore into settings ([key], [value], created_at, updated_at) values
-    ('logo', '', strftime('%s','now'), strftime('%s','now')),
-    ('company', 'Company, LLC.', strftime('%s','now'), strftime('%s','now')),
-    ('address', '123 Main St, City, Country', strftime('%s','now'), strftime('%s','now')),
-    ('email', 'info@company.com', strftime('%s','now'), strftime('%s','now')),
-    ('phone', '123-456-7890', strftime('%s','now'), strftime('%s','now')),
-    ('website', 'www.company.com', strftime('%s','now'), strftime('%s','now')),
-    ('invoice_template', '{{ invoice.summary }}', strftime('%s','now'), strftime('%s','now'));
-    drop view if exists v_invoices;
-    create view if not exists v_invoices as
-    select
-      i.*,
-      case
-        when i.due_date and not i.paid_date and date('now') > i.due_date then 'Overdue'
-        when i.paid_date and i.due_date and i.paid_date > i.due_date then 'Paid Late'
-        when i.paid_date and i.due_date and i.paid_date <= i.due_date then 'Paid'
-        else 'Pending'
-      end as status,
-      c.[name] as client_name,
-      i.labor_amount + coalesce(sum(ii.quantity * ii.unit_price), 0) as total_amount,
-      coalesce(sum(ii.is_expense * ii.quantity * ii.unit_price), 0) as total_expenses
-    from invoices i
-    join clients c on i.client_id = c.id
-    left join invoice_items ii on ii.invoice_id = i.id
-    group by i.id;
-    drop view if exists v_invoice_items;
-    create view if not exists v_invoice_items as
-    select
-      ii.*,
-      i.id as invoice_id,
-      i.[number] as invoice_number,
-      i.client_id,
-      i.client_name as invoice_client_name,
-      i.summary as invoice_summary,
-      ii.quantity * ii.unit_price as total_amount
-    from invoice_items ii
-    join v_invoices i on ii.invoice_id = i.id;
-    SQL;
-    self::getInstance()->exec($sql);
+    self::getInstance()->exec(file_get_contents(ROOT . '/schema.sql'));
+    $default_settings = [
+      'logo' => '',
+      'company' => 'Company, LLC.',
+      'address' => '123 Main St, City, Country',
+      'email' => 'info@company.com',
+      'phone' => '123-456-7890',
+      'website' => 'www.company.com',
+      'invoice_template' => '{{ invoice.summary }}'
+    ];
+    foreach ($default_settings as $k => $v)
+      self::run('insert or ignore into settings (key, value, created_at) values (:key, :value, :created_at)', [
+        'key' => $k,
+        'value' => $v,
+        'created_at' => time()
+      ]);
   }
 
   private static function buildWhere(array $conditions): array
