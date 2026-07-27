@@ -10,10 +10,16 @@ Simple, self-hosted, flat-file invoicing web app, with invoice templating and us
   - pdo_sqlite
 
 ## Get Started
-```bash
-composer create-project ginger-tek/faktura ./my-app
-```
-Serve app from `public/`. Use CLI to create initial user
+1. Create new instance in current directory:
+    ```bash
+    composer create-project ginger-tek/faktura .
+    ```
+2. Run setup script (if not using OS env vars, local .env file will be generated):
+    ```bash
+    composer cli setup
+    ```
+4. Create first admin user (see [create new user](#create-new-user)):
+3. Finally, serve app from `public/` using preferred web server
 
 ## CLI
 ### List Users
