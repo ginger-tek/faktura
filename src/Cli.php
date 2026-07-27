@@ -11,18 +11,17 @@ set_error_handler(function ($severity, $message, $file, $line) {
 
 try {
   (match ($argv[1]) {
-    'setup' => function () use ($argv) {
-        if (!file_exists(ROOT . '/.env')) {
-          $jwt_secret = bin2hex(random_bytes(32));
-          $env = file_get_contents(ROOT . '/.env.example');
-          $env = str_replace('__JWT_SECRET__', $jwt_secret, $env);
-          putenv("JWT_SECRET=$jwt_secret");
-          file_put_contents(ROOT . '/.env', $env);
-        }
-        exit('Setup completed');
+    'setup-env' => function () use ($argv) {
+        if (file_exists(ROOT . '/.env') || getenv('DB_DSN'))
+          exit('Setup already completed');
+        $env = file_get_contents(ROOT . '/.env.example');
+        $env = str_replace('__JWT_SECRET__', bin2hex(random_bytes(32)), $env);
+        file_put_contents(ROOT . '/.env', $env);
+        exit('Setup completed, .env created');
       },
     'init-schema' => function () {
-        exit(\App\Crud::initSchema() ?? 0);
+        \App\Crud::initSchema();
+        exit('Schema initialized');
       },
     'new-user' => function () use ($argv) {
         if (!isset($argv[2], $argv[3]))
