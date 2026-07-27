@@ -13,8 +13,8 @@
     },
     "scripts": {
         "cli": "php ./src/Cli.php",
-        "post-install-cmd": [
-            "cli setup",
+        "setup": [
+            "cli setup-env",
             "cli init-schema"
         ]
     }
