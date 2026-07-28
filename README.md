@@ -16,7 +16,7 @@ Simple, self-hosted, flat-file invoicing web app, with invoice templating and us
     ```
 2. Run setup script (if not using OS env vars, local .env file will be generated):
     ```bash
-    composer cli setup
+    composer run setup
     ```
 4. Create first admin user (see [create new user](#create-new-user)):
 3. Finally, serve app from `public/` using preferred web server
