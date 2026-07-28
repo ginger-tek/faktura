@@ -1,6 +1,8 @@
 {
     "name": "ginger-tek/faktura",
+    "description": "Simple, self-hosted, flat-file invoicing web app, with invoice templating and user access control",
     "type": "project",
+    "license": "ISC",
     "require": {
         "ginger-tek/routy": "^4.4",
         "parsedown/parsedown": "^1.8",
