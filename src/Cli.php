@@ -15,7 +15,7 @@ try {
         if (file_exists(ROOT . '/.env') || getenv('DB_DSN'))
           exit('Setup already completed');
         $env = file_get_contents(ROOT . '/example.env');
-        $env = str_replace('__JWT_SECRET__', bin2hex(random_bytes(32)), $env);
+        $env = str_replace('JWT_SECRET=', 'JWT_SECRET=' . bin2hex(random_bytes(32)), $env);
         file_put_contents(ROOT . '/.env', $env);
         exit('Setup completed, .env created');
       },
