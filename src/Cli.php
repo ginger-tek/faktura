@@ -44,8 +44,8 @@ try {
           exit('Usage: php Cli.php filter-sum-permissions <permissions_regex>');
         exit(json_encode(\App\Permissions::sum($argv[2]), JSON_PRETTY_PRINT));
       },
-    default => function () {
-        exit('Unknown command');
+    default => function () use ($argv) {
+        exit("Unknown command: {$argv[1]}");
       }
   })();
 } catch (\Throwable $e) {
