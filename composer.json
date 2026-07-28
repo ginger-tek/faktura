@@ -16,8 +16,8 @@
     "scripts": {
         "cli": "php ./src/Cli.php",
         "setup": [
-            "cli setup-env",
-            "cli init-schema"
+            "@cli setup-env",
+            "@cli init-schema"
         ]
     }
 }
