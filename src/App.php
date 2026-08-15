@@ -8,7 +8,7 @@ try {
       $ctx['branding'] = join(' | ', array_filter(['Faktura', getenv('BRANDING') ?: '']));
       $ctx['view'] = ROOT . "/views/$view.php";
       $ctx['title'] ??= $ctx['message'] ?? ucfirst($view);
-      $ctx['permissions'] = $app->getCtx('user')->permissions_bit ? array_values(array_filter(
+      $ctx['permissions'] = $app->getCtx('user')?->permissions_bit ? array_values(array_filter(
         \App\Permissions::list(),
         fn($bit) => \App\Permissions::has($app->getCtx('user')->permissions_bit, $bit),
       )) : [];
