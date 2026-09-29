@@ -4,7 +4,7 @@
     "type": "project",
     "license": "ISC",
     "require": {
-        "ginger-tek/routy": "^4.5",
+        "ginger-tek/routy": "^4.6",
         "parsedown/parsedown": "^1.8",
         "firebase/php-jwt": "^7.1"
     },
