@@ -50,5 +50,5 @@ try {
   $app->fallback(fn() => $app->render('notFound'));
 } catch (\Exception $e) {
   error_log($e->getMessage());
-  $app->render('error', ['message' => 'An error occurred!']);
+  $app->render('error', ['message' => 'An error occurred, please try again later or contact support.']);
 }
