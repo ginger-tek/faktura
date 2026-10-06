@@ -115,10 +115,10 @@
   <header class="mb-sm"><b>Permissions</b></header>
   <form method="dialog">
     <input type="hidden" name="index">
-    <ul columns="2">
+    <ul columns="2" class="no-marker">
       <?php foreach (\App\Permissions::list() as $name => $bit): ?>
         <li>
-          <label style="width:200px">
+          <label style="min-width:200px">
             <input type="checkbox" name="permissions[]" value="<?= $bit ?>">
             <?= $name ?>
           </label>
