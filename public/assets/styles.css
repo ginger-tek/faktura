@@ -141,6 +141,12 @@ input[type=radio] {
   transform: scale(1.25);
 }
 
+table td input[type=number] {
+  width: stretch;
+  -moz-field-sizing: content;
+  field-sizing: content;
+}
+
 textarea[data-code] {
   font-family: monospace;
   font-size: 1em;
@@ -369,7 +375,7 @@ article {
 details {
   box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
   border-radius: 4px;
-  
+
   >summary {
     cursor: pointer;
     padding: .25em .5em;
