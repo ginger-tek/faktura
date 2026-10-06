@@ -1,5 +1,5 @@
-<h4>My Account</h4>
-<p>Updating your password will log you out from all devices and require you to log back in with the new password.</p>
+<h2>My Account</h2>
+<p class="alert info">Updating your password will log you out from all devices and require you to log back in with the new password.</p>
 <form method="POST" action="/account">
   <label>Current Password
     <input type="password" name="current_password" required>
