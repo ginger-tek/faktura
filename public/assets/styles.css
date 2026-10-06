@@ -45,6 +45,29 @@ nav a {
   text-decoration: none;
 }
 
+nav details {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
+  border-radius: 4px;
+  outline: 1px solid rgba(0, 0, 0, .25);
+
+  &>summary {
+    &:has(>.marker)::marker {
+      content: none;
+    }
+
+    .marker {
+      display: inline-block;
+      vertical-align: middle;
+      margin-top: -.15rem;
+      font-weight: bold;
+      height: 1em;
+      width: 1em;
+      opacity: .75;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v2H2V2zm0 5h12v2H2V7zm0 5h12v2H2v-2z"/></svg>') no-repeat left center;
+    }
+  }
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -91,6 +114,7 @@ table {
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, .5);
   background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
 
   &:focus {
     outline: 2px solid rgba(0, 0, 0, .5);
@@ -161,6 +185,7 @@ button {
   background-color: var(--background-color);
   min-width: 70px;
   outline: 2px solid transparent;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
 
   &:hover {
     outline: 2px solid rgba(from var(--background-color) r g b / 0.25);
@@ -194,6 +219,10 @@ button {
     border-color: var(--yellow);
     color: black;
   }
+}
+
+.color-white {
+  color: #fff;
 }
 
 .color-red {
@@ -250,6 +279,31 @@ button {
 
 .mb-1 {
   margin-bottom: 1rem;
+}
+
+.alert {
+  padding: .5rem;
+  border-radius: 4px;
+
+  &.success {
+    background-color: var(--green);
+    color: white;
+  }
+
+  &.danger {
+    background-color: var(--red);
+    color: white;
+  }
+
+  &.info {
+    background-color: var(--teal);
+    color: white;
+  }
+
+  &.warning {
+    background-color: var(--yellow);
+    color: black;
+  }
 }
 
 .flex {
@@ -313,6 +367,9 @@ article {
 }
 
 details {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
+  border-radius: 4px;
+  
   >summary {
     cursor: pointer;
     padding: .25em .5em;
