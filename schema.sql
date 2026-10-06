@@ -115,7 +115,6 @@ create view
   if not exists v_invoice_items as
 select
   ii.*,
-  i.id as invoice_id,
   i.number as invoice_number,
   i.client_id,
   i.client_name as invoice_client_name,
