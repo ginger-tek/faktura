@@ -75,11 +75,11 @@
                 value="<?= htmlspecialchars($item->summary) ?>" required>
             </td>
             <td>
-              <input style="width:100%" type="number" step="1" name="items[<?= $key ?>][quantity]"
+              <input type="number" step="1" name="items[<?= $key ?>][quantity]"
                 value="<?= htmlspecialchars($item->quantity) ?>" required>
             </td>
             <td data-align="right">
-              <input style="width:100%" type="number" step="0.01" name="items[<?= $key ?>][unit_price]"
+              <input type="number" step="0.01" name="items[<?= $key ?>][unit_price]"
                 value="<?= htmlspecialchars($item->unit_price) ?>" required>
             </td>
             <td data-align="right">
