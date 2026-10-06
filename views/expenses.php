@@ -1,5 +1,5 @@
 <div class="flex spaced mb-1">
-  <h3 class="m-0">Expenses</h3>
+  <h2 class="m-0">Expenses</h2>
   <form method="GET">
     <select name="sort" onchange="this.form.submit()">
       <option value="" hidden>Sort By</option>
