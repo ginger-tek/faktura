@@ -1,5 +1,5 @@
 <div class="flex spaced mb-1">
-  <h3 class="m-0">Users</h3>
+  <h2 class="m-0">Users</h2>
   <div>
     <?php if (in_array(\App\Permissions::EDIT_USERS, $permissions)): ?>
       <button type="submit" form="users" class="success">Save All</button>
