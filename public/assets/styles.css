@@ -450,6 +450,11 @@ hr {
   background-color: rgba(0, 0, 0, .5);
 }
 
+ul.no-marker {
+  list-style-type: none;
+  padding: 0;
+}
+
 dialog {
   border: 1px solid;
   border-radius: 4px;
