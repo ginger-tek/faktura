@@ -60,15 +60,15 @@ class Controller
       'year' => [
         'date' => $year,
         'total_income' => Crud::run(
-          'select sum(paid_amount) as total
+          'select sum(paid_amount - total_expenses) as total
           from v_invoices
           where paid_date like :year and status = "Paid"',
           ['year' => $year->format('Y') . '%']
         )->fetch()->total,
         'total_expenses' => Crud::run(
-          'select sum(quantity * unit_price) as total
+          "select sum(quantity * unit_price) as total
           from v_invoice_items
-          where is_expense = 1 and created_at like :created_at',
+          where is_expense = 1 and strftime('%Y', created_at, 'unixepoch') like :created_at",
           ['created_at' => $year->format('Y') . '%']
         )->fetch()->total,
         'upcoming_income' => Crud::run(
@@ -85,15 +85,15 @@ class Controller
       'month' => [
         'date' => $month,
         'total_income' => Crud::run(
-          'select sum(paid_amount) as total
+          'select sum(paid_amount - total_expenses) as total
           from v_invoices
           where paid_date like :month and status = "Paid"',
           ['month' => $month->format('Y-m') . '%']
         )->fetch()->total,
         'total_expenses' => Crud::run(
-          'select sum(quantity * unit_price) as total
+          "select sum(quantity * unit_price) as total
           from v_invoice_items
-          where is_expense = 1 and created_at like :created_at',
+          where is_expense = 1 and strftime('%Y-%m', created_at, 'unixepoch') like :created_at",
           ['created_at' => $month->format('Y-m') . '%']
         )->fetch()->total,
         'upcoming_income' => Crud::run(
@@ -152,7 +152,7 @@ class Controller
       'chart' => $month,
       'next_month' => $dateObj->format('Y-m'),
       'summary' => [
-        'number_of_invoices' => count($invoices),
+        'number_of_invoices' => \count($invoices),
         'total_revenue' => array_reduce($month['days'], fn($c, $d) => $c + $d['revenue'], 0),
         'total_expenses' => array_reduce($month['days'], fn($c, $d) => $c + $d['expenses'], 0),
         'total_expected_income' => array_reduce($month['days'], fn($c, $d) => $c + $d['expected_income'], 0),
@@ -198,7 +198,7 @@ class Controller
       'chart' => $year,
       'next_year' => $dateObj->format('Y'),
       'summary' => [
-        'number_of_invoices' => count($invoices),
+        'number_of_invoices' => \count($invoices),
         'total_revenue' => array_reduce($year['months'], fn($c, $d) => $c + $d['revenue'], 0),
         'total_expenses' => array_reduce($year['months'], fn($c, $d) => $c + $d['expenses'], 0),
         'total_expected_income' => array_reduce($year['months'], fn($c, $d) => $c + $d['expected_income'], 0),
