@@ -35,10 +35,11 @@ class Utils
       };
       if ($mod) {
         $val = match ($mod) {
-          'date' => date('n/j/Y', strtotime($val)),
+          'date' => date('n/j/Y', \is_int($val) ? $val : strtotime($val)),
           'upper' => strtoupper($val),
           'lower' => strtolower($val),
           'currency' => Utils::to_currency($val),
+          'ucwords' => ucwords($val),
           default => $val
         };
       }
