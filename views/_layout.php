@@ -17,7 +17,7 @@
       <div class="flex">
         <?php if ($app->getCtx('user')): ?>
           <details class="dropdown" id="menu">
-            <summary>Menu</summary>
+            <summary><span class="marker"></span> Menu</summary>
             <ul>
               <li><b><?= $app->getCtx('user')->username ?? '' ?></b></li>
               <li><a href="/dashboard">Dashboard</a></li>
